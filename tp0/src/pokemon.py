@@ -36,12 +36,13 @@ class Stats(NamedTuple):
 
 
 class StatusEffect(Enum):
+    NONE = ("none", 1)
     POISON = ("poison", 1.5)
     BURN = ("burn", 1.5)
     PARALYSIS = ("paralysis", 1.5)
     SLEEP = ("sleep", 2)
     FREEZE = ("freeze", 2)
-    NONE = ("none", 1)
+    
 
 
 class Pokemon:
