@@ -22,6 +22,25 @@ def find_agent(board, size):
         for j in range(size):   
             if board[i][j] == AGENT or board[i][j] == AGENT_ON_DESTINY:
                 return i,j
+            
+def find_walls(board, size):
+    walls = []
+    for i in range(1,size-1) :       
+        for j in range(1,size-1):   
+            if board[i][j] == WALL:
+                aux = [i,j]
+                walls.append(aux)
+    return walls
+            
+
+def find_destinies(board, size):
+    destinies = []
+    for i in range(size):       
+        for j in range(size):   
+            if board[i][j] == DESTINY or board[i][j] == BOX_ON_DESTINY or board[i][j] == AGENT_ON_DESTINY :
+                aux = [i,j]
+                destinies.append(aux)
+    return destinies
 
 def solution(board, boxes):
     for box in boxes:
