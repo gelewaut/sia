@@ -18,6 +18,7 @@ def find_closest_box_bfs(board, size):
         aux = Fr.pop(0)
         if agent_next_to_box(aux.getBoard(), sok.find_agent(aux.getBoard(), size)):
             return aux.cost
+        Exp.add(aux)
         y,x = sok.find_agent(aux.getBoard(), size)
 
         append_fronteer_bfs(Fr, Exp, aux, size, x,y, sok.UP)
@@ -38,7 +39,7 @@ def append_fronteer_bfs(fronteer, explored, current_node, size, x, y, direction)
 def agent_next_to_box(board, agent):
     x = agent[1]
     y = agent[0]
-    if board[y+1][x] == sok.BOX or board[y-1][x] == sok.BOX or board[y][x+1] == sok.BOX or board[y][x-1] == sok.BOX:
+    if board[y+1][x] == sok.BOX or board[y-1][x] == sok.BOX or board[y][x+1] == sok.BOX or board[y][x-1] == sok.BOX or board[y+1][x] == sok.BOX_ON_DESTINY or board[y-1][x] == sok.BOX_ON_DESTINY or board[y][x+1] == sok.BOX_ON_DESTINY or board[y][x-1] == sok.BOX_ON_DESTINY:
         return True
     return False
 

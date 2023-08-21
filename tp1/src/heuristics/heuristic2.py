@@ -33,6 +33,6 @@ def heuristic_2(board, size):
                     boxes_in_line+=1
                     break
             
-    return boxes_in_line
+    return len(boxes) - boxes_in_line
             
                 
