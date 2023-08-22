@@ -3,116 +3,43 @@
 # 2 caja
 # 3 destino
 # 4 agente
-import numpy as np
-from src.sokoban import move_agent, find_agent
-import src.sokoban as sok
 from src.algorithms.bfs import sokoban_bfs
 from src.algorithms.dfs import sokoban_dfs
 from src.algorithms.greedy import sokoban_greedy
 from src.algorithms.aStar import sokoban_aStar
-from src.node import Node
-import time
-from src.heuristics.heuristic1 import find_closest_box_bfs
+from src.heuristics.heuristic1 import heuristic_1
 from src.heuristics.heuristic2 import heuristic_2
-from src.heuristics.heuristic3 import heuristic_3
-
-SIZE = 6
-
-SIZE_SOKO1 = 15
-soko1 = np.array([
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,3,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,3,1,1,1,1,1,1,1],
-    [1,1,1,0,0,0,0,0,0,0,0,0,1,1,1],
-    [1,1,0,0,1,0,1,0,1,0,1,0,0,1,1],
-    [1,0,0,1,1,0,0,0,0,0,1,1,0,0,1],
-    [1,0,1,1,0,0,1,0,1,0,0,1,1,0,1],
-    [1,0,0,0,0,0,2,4,2,0,0,0,0,0,1],
-    [1,1,1,1,0,0,1,1,1,0,0,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-])
-
-soko6 = np.array([
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
-    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
-    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
-    [1,1,1,1,1,0,1,3,1,0,1,1,1,1,1],
-    [1,0,0,0,0,2,3,0,3,2,0,0,0,0,1],
-    [1,0,0,0,1,0,1,2,1,0,1,0,0,0,1],
-    [1,0,0,0,3,0,2,4,2,0,3,0,0,0,1],
-    [1,0,0,0,1,0,1,2,1,0,1,0,0,0,1],
-    [1,0,0,0,0,2,3,0,3,2,0,0,0,0,1],
-    [1,1,1,1,1,0,0,0,0,0,1,1,1,1,1],
-    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
-    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
-    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-])
-
-board = np.array([
-    [1, 1, 1, 1, 1, 1],
-    [1, 0, 3, 0, 0, 1],
-    [1, 0, 0, 2, 3, 1],
-    [1, 0, 2, 0, 0, 1],
-    [1, 0, 4, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1]
-])
-
-board2 = np.array([
-    [1, 1, 1, 1, 1, 1],
-    [1, 0, 3, 0, 0, 1],
-    [1, 0, 1, 0, 0, 1],
-    [1, 0, 2, 0, 0, 1],
-    [1, 0, 4, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1]
-])
-
-board3 = np.array([
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 1, 1],
-    [1, 4, 2, 0, 2, 3, 3, 1],
-    [1, 0, 0, 0, 0, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-])
+from src.board import board, SIZE
 
 if __name__ == "__main__":
 
+    board_try = board
+    size = SIZE
+    
+    heuristics = [heuristic_1,heuristic_2]
+  
+    ALGORYTHM = int(input("\nSeleccione que algoritmo quieres que te lo resuelva\n\t1. A*.\n\t2. BFS.\n\t3. DFS.\n\t4. Greedy.\nAlgoritmo: "))
+    while ALGORYTHM != 1 and ALGORYTHM != 2 and ALGORYTHM != 3 and ALGORYTHM != 4:
+        ALGORYTHM = int(input("El numero ingresado es incorrecto, por favor ingrese un numero del 1 al 4: "))
 
-    # start_time = time.time()
-    # result_heuristic = find_closest_box_bfs(board, SIZE)
-    # print(result_heuristic)
-    # result = sokoban_greedy(find_closest_box_bfs, board, SIZE)
-    # result = sokoban_aStar(find_closest_box_bfs, board, SIZE)
-    # end_time = time.time()
-    # while result != 0:
-    #     print(result.board)
-    #     result = result.parent
-    #     print("---------------------------------------")
-    # print("Finished: ",(end_time-start_time))
+    HEURISTIC = 0
+    if(ALGORYTHM == 1 or ALGORYTHM == 4):
+        HEURISTIC = int(input("\nSeleccione que heuristica quieres utilizar\n\t1. Calcular la distancia de manhatan entre un agente y la caja mas cercana.\n\t2. Evaluar cuantas cajas estan conectadas directamente a las metas por caminos despejados, es decir caminos \"rectos\".\nHeuristica: "))
+        while HEURISTIC != 1 and HEURISTIC != 2 :
+            HEURISTIC = int(input("El numero ingresado es incorrecto, por favor ingrese un numero del 1 al 2: "))
 
-    board_try = soko1
-    size = SIZE_SOKO1
-
-    finished, cost, expanded, fronteer, solution, time_taken = sokoban_bfs(board_try, size)
-    print(finished, cost, expanded, fronteer, time_taken)
-    finished, cost, expanded, fronteer, solution, time_taken = sokoban_dfs(board_try, size)
-    print(finished, cost, expanded, fronteer, time_taken)
-    finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(heuristic_2, board_try, size)
-    print(finished, cost, expanded, fronteer, time_taken)
-    finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(heuristic_3, board_try, size)
-    print(finished, cost, expanded, fronteer, time_taken)
-    finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(heuristic_2, board_try, size)
-    print(finished, cost, expanded, fronteer, time_taken)
-    finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(heuristic_3, board_try, size)
-    print(finished, cost, expanded, fronteer, time_taken)
+    
+    if ALGORYTHM == 1:
+        finished, cost, expanded, fronteer, solution, time_taken = sokoban_bfs(board_try, size)
+    elif ALGORYTHM == 2:
+        finished, cost, expanded, fronteer, solution, time_taken = sokoban_dfs(board_try, size)
+    elif ALGORYTHM == 3: 
+        finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(heuristics[HEURISTIC - 1], board_try, size)
+    elif ALGORYTHM == 4:
+        finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(heuristics[HEURISTIC - 1], board_try, size)
+        
+    print("\n-------------------\n")
+    print("Termino el juego: ",finished, "\nCosto del algoritmo: ",cost,"\nNodos expandidos: ",expanded, "\nNodos Frontera: ", fronteer, "\nTiempo Requerido: ", time_taken)
+    
 
 
