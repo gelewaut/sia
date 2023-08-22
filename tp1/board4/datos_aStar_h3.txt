@@ -1,0 +1,17 @@
+Data for board 4:
+
+Finished = True
+Cost = 78
+Nodes = 15484
+Fronteer = 139
+Time taken = 21.61098027229309
+Finished = True
+Cost = 78
+Nodes = 15484
+Fronteer = 139
+Time taken = 21.143834114074707
+Finished = True
+Cost = 78
+Nodes = 15484
+Fronteer = 139
+Time taken = 21.488585948944092
