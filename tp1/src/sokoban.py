@@ -57,15 +57,11 @@ def can_continue(board, boxes):
         count = 0
         if board[y][x] == BOX:
             if board[y-1][x] == WALL:
-                count +=1
+                if board[y][x-1] == WALL or board[y][x+1] == WALL:
+                    return False
             if board[y+1][x] == WALL:
-                count +=1
-            if board[y][x-1] == WALL:
-                count +=1
-            if board[y][x+1] == WALL:
-                count +=1
-            if count >= 2:
-                return False
+                if board[y][x-1] == WALL or board[y][x+1] == WALL:
+                    return False
     return True
 
 def find_boxes(board, size):
