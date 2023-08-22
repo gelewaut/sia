@@ -9,7 +9,7 @@ import src.sokoban as sok
 from src.algorithms.bfs import sokoban_bfs
 from src.algorithms.dfs import sokoban_dfs
 from src.algorithms.greedy import sokoban_greedy
-from src.algorithms.aAsterisk import sokoban_aStar
+from src.algorithms.aStar import sokoban_aStar
 from src.node import Node
 import time
 from src.heuristics.heuristic1 import find_closest_box_bfs

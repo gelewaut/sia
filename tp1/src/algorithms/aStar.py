@@ -1,8 +1,10 @@
 from src.node import Node, StarNode
 import src.sokoban as sok 
-from src.heuristics.heuristic2 import heuristic_2
+import time
 
+# return Bool for success, cost, cant nodes expanded, cant nodes fronteer, final node, time taken 
 def sokoban_aStar(heuristic, board, size):
+    start_time = time.time()
     Fr = []
     Exp = set()
     n0 = Node(board, 0, 0)
@@ -16,7 +18,8 @@ def sokoban_aStar(heuristic, board, size):
         aux = Fr.pop(0)
         aux = aux.getNode()
         if sok.solution(aux.getBoard(), sok.find_boxes(aux.getBoard(), size)):
-            return aux
+            end_time = time.time
+            return True, aux.getCost(), len(Exp), len(Fr), aux, (start_time-end_time)
         Exp.add(aux)
         y,x = sok.find_agent(aux.getBoard(), size)
         
@@ -25,7 +28,8 @@ def sokoban_aStar(heuristic, board, size):
         append_fronteer_astar(Fr, Exp, aux, size, x,y, sok.LEFT, heuristic)
         append_fronteer_astar(Fr, Exp, aux, size, x,y, sok.RIGHT, heuristic)
                         
-    return 0    
+    end_time = time.time        
+    return False, 0, len(Exp), len(Fr), None, (start_time-end_time)
 
 def append_fronteer_astar(fronteer, explored, current_node, size, x, y, direction, heuristic):
     board_aux,movement = sok.move_agent(current_node.getBoard(), x, y, direction)
