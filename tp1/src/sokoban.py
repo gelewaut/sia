@@ -54,7 +54,6 @@ def can_continue(board, boxes):
     for box in boxes:
         y = box[0]
         x = box[1]
-        count = 0
         if board[y][x] == BOX:
             if board[y-1][x] == WALL:
                 if board[y][x-1] == WALL or board[y][x+1] == WALL:
@@ -95,7 +94,7 @@ def move_agent(board, x, y, direction):
                 new[y][x] = SPACE
         
         
-        elif new[y+1][x] == BOX:
+        elif new[y+1][x] == BOX or new[y+1][x] == BOX_ON_DESTINY:
             if new[y+2][x] == WALL or new[y+2][x] == BOX or new[y+2][x] == BOX_ON_DESTINY:
                 return new,False
             
@@ -137,7 +136,7 @@ def move_agent(board, x, y, direction):
                 new[y][x] = SPACE
         
         
-        elif new[y-1][x] == BOX:
+        elif new[y-1][x] == BOX or new[y-1][x] == BOX_ON_DESTINY:
             if new[y-2][x] == WALL or new[y-2][x] == BOX or new[y-2][x] == BOX_ON_DESTINY:
                 return new,False
             
@@ -181,7 +180,7 @@ def move_agent(board, x, y, direction):
                 new[y][x] = SPACE
         
         
-        elif new[y][x-1] == BOX:
+        elif new[y][x-1] == BOX or new[y][x-1] == BOX_ON_DESTINY:
             if new[y][x-2] == WALL or new[y][x-2] == BOX or new[y][x-2] == BOX_ON_DESTINY:
                 return new,False
             if new[y][x-2] == SPACE:
@@ -222,7 +221,7 @@ def move_agent(board, x, y, direction):
                 new[y][x]= SPACE
         
         
-        elif new[y][x+1] == BOX:
+        elif new[y][x+1] == BOX or new[y][x+1] == BOX_ON_DESTINY:
             if new[y][x+2] == WALL or new[y][x+2] == BOX or new[y][x+2] == BOX_ON_DESTINY:
                 return new,False
 

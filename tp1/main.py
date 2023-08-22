@@ -19,21 +19,21 @@ SIZE = 6
 
 SIZE_SOKO1 = 15
 soko1 = np.array([
-    [0,0,0,0,0,0,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,3,1,0,0,0,0,0,0],
-    [0,0,1,1,1,1,1,3,1,1,1,1,1,0,0],
-    [0,1,1,0,0,0,0,0,0,0,0,0,1,1,0],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,3,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,3,1,1,1,1,1,1,1],
+    [1,1,1,0,0,0,0,0,0,0,0,0,1,1,1],
     [1,1,0,0,1,0,1,0,1,0,1,0,0,1,1],
     [1,0,0,1,1,0,0,0,0,0,1,1,0,0,1],
     [1,0,1,1,0,0,1,0,1,0,0,1,1,0,1],
     [1,0,0,0,0,0,2,4,2,0,0,0,0,0,1],
     [1,1,1,1,0,0,1,1,1,0,0,1,1,1,1],
-    [0,0,0,1,1,1,1,0,1,1,1,1,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ])
 
 board = np.array([
@@ -52,6 +52,17 @@ board2 = np.array([
     [1, 0, 2, 0, 0, 1],
     [1, 0, 4, 0, 0, 1],
     [1, 1, 1, 1, 1, 1]
+])
+
+board3 = np.array([
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 4, 2, 0, 2, 3, 3, 1],
+    [1, 0, 0, 0, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1],
 ])
 
 if __name__ == "__main__":
@@ -74,15 +85,15 @@ if __name__ == "__main__":
 
     finished, cost, expanded, fronteer, solution, time_taken = sokoban_bfs(board_try, size)
     print(finished, cost, expanded, fronteer, time_taken)
-    # finished, cost, expanded, fronteer, solution, time_taken = sokoban_dfs(board_try, size)
-    # print(finished, cost, expanded, fronteer, time_taken)
-    # finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(find_closest_box_bfs, board_try, size)
-    # print(finished, cost, expanded, fronteer, time_taken)
-    # finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(heuristic_2, board_try, size)
-    # print(finished, cost, expanded, fronteer, time_taken)
-    # finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(find_closest_box_bfs, board_try, size)
-    # print(finished, cost, expanded, fronteer, time_taken)
-    # finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(heuristic_2, board_try, size)
-    # print(finished, cost, expanded, fronteer, time_taken)
+    finished, cost, expanded, fronteer, solution, time_taken = sokoban_dfs(board_try, size)
+    print(finished, cost, expanded, fronteer, time_taken)
+    finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(find_closest_box_bfs, board_try, size)
+    print(finished, cost, expanded, fronteer, time_taken)
+    finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(heuristic_2, board_try, size)
+    print(finished, cost, expanded, fronteer, time_taken)
+    finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(find_closest_box_bfs, board_try, size)
+    print(finished, cost, expanded, fronteer, time_taken)
+    finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(heuristic_2, board_try, size)
+    print(finished, cost, expanded, fronteer, time_taken)
 
 
