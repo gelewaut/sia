@@ -14,6 +14,7 @@ from src.node import Node
 import time
 from src.heuristics.heuristic1 import find_closest_box_bfs
 from src.heuristics.heuristic2 import heuristic_2
+from src.heuristics.heuristic3 import heuristic_3
 
 SIZE = 6
 
@@ -33,6 +34,24 @@ soko1 = np.array([
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+])
+
+soko6 = np.array([
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
+    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
+    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
+    [1,1,1,1,1,0,1,3,1,0,1,1,1,1,1],
+    [1,0,0,0,0,2,3,0,3,2,0,0,0,0,1],
+    [1,0,0,0,1,0,1,2,1,0,1,0,0,0,1],
+    [1,0,0,0,3,0,2,4,2,0,3,0,0,0,1],
+    [1,0,0,0,1,0,1,2,1,0,1,0,0,0,1],
+    [1,0,0,0,0,2,3,0,3,2,0,0,0,0,1],
+    [1,1,1,1,1,0,0,0,0,0,1,1,1,1,1],
+    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
+    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
+    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ])
 
@@ -57,7 +76,7 @@ board2 = np.array([
 board3 = np.array([
     [1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 1, 1],
     [1, 4, 2, 0, 2, 3, 3, 1],
     [1, 0, 0, 0, 0, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
@@ -87,13 +106,13 @@ if __name__ == "__main__":
     print(finished, cost, expanded, fronteer, time_taken)
     finished, cost, expanded, fronteer, solution, time_taken = sokoban_dfs(board_try, size)
     print(finished, cost, expanded, fronteer, time_taken)
-    finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(find_closest_box_bfs, board_try, size)
-    print(finished, cost, expanded, fronteer, time_taken)
     finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(heuristic_2, board_try, size)
     print(finished, cost, expanded, fronteer, time_taken)
-    finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(find_closest_box_bfs, board_try, size)
+    finished, cost, expanded, fronteer, solution, time_taken = sokoban_greedy(heuristic_3, board_try, size)
     print(finished, cost, expanded, fronteer, time_taken)
     finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(heuristic_2, board_try, size)
+    print(finished, cost, expanded, fronteer, time_taken)
+    finished, cost, expanded, fronteer, solution, time_taken = sokoban_aStar(heuristic_3, board_try, size)
     print(finished, cost, expanded, fronteer, time_taken)
 
 
