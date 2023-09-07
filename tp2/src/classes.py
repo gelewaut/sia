@@ -24,6 +24,9 @@ class Attributes(object):
     def get_hp(self):
         return self.hp
 
+    def get_height(self):
+        return self.height
+
     def set_strength(self, strength):
         self.strength = strength
         
@@ -38,6 +41,9 @@ class Attributes(object):
          
     def set_hp(self, hp):
         self.hp = hp
+
+    def set_height(self, height):
+        self.height = height
 
 
 class Character(object):
