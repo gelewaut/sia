@@ -9,7 +9,7 @@ max_height = 2.0
 min_prob = 0.0
 max_prob = 1.0
 
-gens = 6
+gens = 5
 strength = 0
 agility = 1
 expertise = 2
@@ -17,6 +17,8 @@ resistance = 3
 hp = 4
 
 def set_new_gen_normalize(attributes, gen, new_gen):
+    print('gen:', gen)
+    print('new_gen: ', new_gen)
     if gen == strength:
         new_strength, new_agility, new_expertise, new_resistance, new_hp = normalize(
             new_gen, 
@@ -70,7 +72,7 @@ def gen_mutation(attributes, probability):
     mutation_prob = random.uniform(min_prob, max_prob)
     print('Mutation probability = ', mutation_prob)
     if mutation_prob <= probability:
-        chosen_gen = random.uniform(0, gens)
+        chosen_gen = random.randint(0, gens)
         new_gen = random.uniform(min_value, max_value)
         set_new_gen_normalize(attributes, chosen_gen, new_gen)
 
