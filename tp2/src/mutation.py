@@ -17,8 +17,8 @@ resistance = 3
 hp = 4
 
 def set_new_gen_normalize(attributes, gen, new_gen):
-    print('gen:', gen)
-    print('new_gen: ', new_gen)
+    # print('gen:', gen)
+    # print('new_gen: ', new_gen)
     if gen == strength:
         new_strength, new_agility, new_expertise, new_resistance, new_hp = normalize(
             new_gen, 
@@ -59,7 +59,7 @@ def set_new_gen_normalize(attributes, gen, new_gen):
         attributes.set_height(new_height)
         new_strength, new_agility, new_expertise, new_resistance, new_hp = attributes.get_strength(), attributes.get_agility(), attributes.get_expertise(), attributes.get_resistance(), attributes.get_hp()
     
-    print(new_strength, new_agility, new_expertise, new_resistance, new_hp)
+    # print(new_strength, new_agility, new_expertise, new_resistance, new_hp)
 
     attributes.set_strength(new_strength)
     attributes.set_agility(new_agility)
@@ -70,7 +70,7 @@ def set_new_gen_normalize(attributes, gen, new_gen):
 
 def gen_mutation(attributes, probability):
     mutation_prob = random.uniform(min_prob, max_prob)
-    print('Mutation probability = ', mutation_prob)
+    # print('Mutation probability = ', mutation_prob)
     if mutation_prob <= probability:
         chosen_gen = random.randint(0, gens)
         new_gen = random.uniform(min_value, max_value)
@@ -78,7 +78,7 @@ def gen_mutation(attributes, probability):
 
 def multigen_mutation(attributes, probability):
     mutation_prob = random.uniform(min_prob, max_prob)
-    print(mutation_prob)
+    # print(mutation_prob)
     if mutation_prob <= probability:
         new_height = random.uniform(min_height, max_height)
         new_strength, new_agility, new_expertise, new_resistance, new_hp = normalize(
@@ -88,8 +88,8 @@ def multigen_mutation(attributes, probability):
             random.uniform(min_value, max_value), 
             random.uniform(min_value, max_value))
     
-        print(new_strength, new_agility, new_expertise, new_resistance, new_hp)
-        print(new_strength + new_agility + new_expertise + new_resistance + new_hp)
+        # print(new_strength, new_agility, new_expertise, new_resistance, new_hp)
+        # print(new_strength + new_agility + new_expertise + new_resistance + new_hp)
 
 
         attributes.set_strength(new_strength)

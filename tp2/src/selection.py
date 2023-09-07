@@ -2,6 +2,12 @@ import numpy
 import math
 import random
 
+def no_selection(population, max_population):
+    parents = []
+    population.sort()
+    for _ in range(max_population):
+        parents.append(population.pop())
+    return parents
 
 def population_fitness(generation):
     population_fitnesses = []
