@@ -47,96 +47,144 @@ def one_point_cross(parents):
     return children
 
 def two_point_cross(parents):
+    # print(parents.pop())
+    # print(len(parents))
+    # print(parents)
+    parents_dim = len(parents)
     children = []
-    parent1 = parents[0]
-    parent2 = parents[1]
-    parent1_attributes = parent1.get_attributes().get_all()
-    parent2_attributes = parent2.get_attributes().get_all()
-    p1 = 0    # están inicializados así para que
-    p2 = 6    # entre por primera vez al while
-    while p1 + p2 == 6:
-        p1 = random.randint(1, 3)
-        p2 = random.randint(1, 3)
-        print('---------------------------')
-        print('p1 = ', p1)
-        print('p2 = ', p2)
-    mid = 6 - (p1 + p2)
-    print('mid = ', mid)
-    print('-----------------------')
-    child1_attributes = []
-    child2_attributes = []
-    i = 0
-    while i < p1:
-        child1_attributes.append(parent1_attributes[i])
-        child2_attributes.append(parent2_attributes[i])
-        i += 1
-    while (i - p1) < mid:
-        child1_attributes.append(parent2_attributes[i])
-        child2_attributes.append(parent1_attributes[i])
-        i += 1    
-    while (i - p1 - mid) < p2:
-        child1_attributes.append(parent1_attributes[i])
-        child2_attributes.append(parent2_attributes[i])
-        i += 1
-    children.append(create_child(parent1, get_attributes(child1_attributes)))
-    children.append(create_child(parent2, get_attributes(child2_attributes)))
-    return children
-
-def ring_cross(parents):
-    children = []
-    parent1 = parents[0]
-    parent2 = parents[1]
-    parent1_attributes = parent1.get_attributes().get_all()
-    parent2_attributes = parent2.get_attributes().get_all()
-    attributes_dim = len(parent1_attributes)
-    ring_start_pos = random.randint(0, 4)
-    ring_dim = random.randint(1, 3)
-    child1_attributes = []
-    child2_attributes = []
-    children_attributes_filled = False
-    i = 0
-    while i < ring_start_pos:
-        child1_attributes.append(parent1_attributes[i])
-        child2_attributes.append(parent2_attributes[i])
-        i += 1
-    while ring_dim != 0:
-        child1_attributes.append(parent2_attributes[i])
-        child2_attributes.append(parent1_attributes[i])
-        i += 1
-        ring_dim -= 1
-        if i == attributes_dim:
-            i = 0
-            children_attributes_filled = True
-            ring_dim = 0     #parche
-            child1_attributes[i] = parent2_attributes[i]
-            child2_attributes[i] = parent1_attributes[i]   
-    if children_attributes_filled == False:
-        while i < attributes_dim:
+    index = 0
+    if parents_dim % 2 == 1 :
+        odd_parent = parents[index]
+        children.append(create_child(odd_parent, get_attributes(odd_parent.get_attributes().get_all())))
+        index += 1
+    while parents_dim != 0:
+        # print(parents_dim)
+        # print(parents)
+        parents_dim -= 2
+        parent1 = parents[index]
+        index += 1
+        parent2 = parents[index]
+        index += 1
+        parent1_attributes = parent1.get_attributes().get_all()
+        parent2_attributes = parent2.get_attributes().get_all()
+        p1 = -1     #para que entren al while  
+        p2 = -2     #por primera vez
+        while p1 > p2:
+            p1 = random.randint(0, 5)
+            p2 = random.randint(0, 5)
+            # print('---------------------------')
+            # print('p1 = ', p1)
+            # print('p2 = ', p2)
+        if (p1 + p2) <= 6:
+            mid = 6 - (p1 + p2)
+        else:
+            mid = p2 - p1
+        # print('mid = ', mid)
+        # print('-----------------------')
+        child1_attributes = []
+        child2_attributes = []
+        i = 0
+        while i < p1:
+            # print(i)
+            # print('p1 = ', p1)
+            # print('----------------------------')
             child1_attributes.append(parent1_attributes[i])
             child2_attributes.append(parent2_attributes[i])
             i += 1
-    children.append(create_child(parent1, get_attributes(child1_attributes)))
-    children.append(create_child(parent2, get_attributes(child2_attributes)))
+        while (i - p1) < mid:
+            # print(i)
+            # print('mid = ', mid)
+            # print('----------------------------')
+            child1_attributes.append(parent2_attributes[i])
+            child2_attributes.append(parent1_attributes[i])
+            i += 1    
+        while i < 6:
+            # print(i)
+            # print('i - p1 - mid = ', i - p1 - mid)
+            # print('p2 = ', p2)
+            # print('----------------------------')
+            child1_attributes.append(parent1_attributes[i])
+            child2_attributes.append(parent2_attributes[i])
+            i += 1
+        children.append(create_child(parent1, get_attributes(child1_attributes)))
+        children.append(create_child(parent2, get_attributes(child2_attributes)))
+    return children
+
+def ring_cross(parents):
+    parents_dim = len(parents)
+    index = 0
+    children = []
+    if parents_dim % 2 == 1 :
+        odd_parent = parents[index]
+        index += 1
+        children.append(create_child(odd_parent, get_attributes(odd_parent)))
+    while parents_dim != 0:
+        parents_dim -= 2
+        parent1 = parents[index]
+        index += 1
+        parent2 = parents[index]
+        index += 1
+        parent1_attributes = parent1.get_attributes().get_all()
+        parent2_attributes = parent2.get_attributes().get_all()
+        attributes_dim = len(parent1_attributes)
+        ring_start_pos = random.randint(0, 5)
+        ring_dim = random.randint(0, 3)
+        child1_attributes = []
+        child2_attributes = []
+        children_attributes_filled = False
+        i = 0
+        while i < ring_start_pos:
+            child1_attributes.append(parent1_attributes[i])
+            child2_attributes.append(parent2_attributes[i])
+            i += 1
+        while ring_dim != 0:
+            child1_attributes.append(parent2_attributes[i])
+            child2_attributes.append(parent1_attributes[i])
+            i += 1
+            ring_dim -= 1
+            if i == attributes_dim:
+                i = 0
+                children_attributes_filled = True
+                ring_dim = 0     
+                child1_attributes[i] = parent2_attributes[i]
+                child2_attributes[i] = parent1_attributes[i]   
+        if children_attributes_filled == False:
+            while i < attributes_dim:
+                child1_attributes.append(parent1_attributes[i])
+                child2_attributes.append(parent2_attributes[i])
+                i += 1
+        children.append(create_child(parent1, get_attributes(child1_attributes)))
+        children.append(create_child(parent2, get_attributes(child2_attributes)))
     return children    
 
 def uniform_cross(parents):
+    parents_dim = len(parents)
     children = []
-    parent1 = parents[0]
-    parent2 = parents[1]
-    parent1_attributes = parent1.get_attributes().get_all()
-    parent2_attributes = parent2.get_attributes().get_all()
-    attributes_dim = len(parent1_attributes)
-    child1_attributes = []
-    child2_attributes = []
-    cross_probability = 0.5
-    for i in range(attributes_dim):
-        probability = random.uniform(0.0, 1.0)
-        if probability <= cross_probability:
-            child1_attributes.append(parent2_attributes[i])
-            child2_attributes.append(parent1_attributes[i])
-        else:
-            child1_attributes.append(parent1_attributes[i])
-            child2_attributes.append(parent2_attributes[i])
-    children.append(create_child(parent1, get_attributes(child1_attributes)))
-    children.append(create_child(parent2, get_attributes(child2_attributes)))
+    index = 0
+    if parents_dim % 2 == 1 :
+        odd_parent = parents[index]
+        index += 1
+        children.append(create_child(odd_parent, get_attributes(odd_parent)))
+    while parents_dim != 0:
+        parents_dim -= 2
+        parent1 = parents[index]
+        index += 1
+        parent2 = parents[index]
+        index += 1
+        parent1_attributes = parent1.get_attributes().get_all()
+        parent2_attributes = parent2.get_attributes().get_all()
+        attributes_dim = len(parent1_attributes)
+        child1_attributes = []
+        child2_attributes = []
+        cross_probability = 0.5
+        for i in range(attributes_dim):
+            probability = random.uniform(0.0, 1.0)
+            if probability <= cross_probability:
+                child1_attributes.append(parent2_attributes[i])
+                child2_attributes.append(parent1_attributes[i])
+            else:
+                child1_attributes.append(parent1_attributes[i])
+                child2_attributes.append(parent2_attributes[i])
+        children.append(create_child(parent1, get_attributes(child1_attributes)))
+        children.append(create_child(parent2, get_attributes(child2_attributes)))
     return children

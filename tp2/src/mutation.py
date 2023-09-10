@@ -9,12 +9,13 @@ max_height = 2.0
 min_prob = 0.0
 max_prob = 1.0
 
-gens = 5
-strength = 0
-agility = 1
-expertise = 2
-resistance = 3
-hp = 4
+gens = 6
+strength = 1
+agility = 2
+expertise = 3
+resistance = 4
+hp = 5
+height = 6
 
 def set_new_gen_normalize(attributes, gen, new_gen):
     # print('gen:', gen)
@@ -69,6 +70,7 @@ def set_new_gen_normalize(attributes, gen, new_gen):
 
 
 def gen_mutation(attributes, probability):
+    # print(attributes)
     mutation_prob = random.uniform(min_prob, max_prob)
     # print('Mutation probability = ', mutation_prob)
     if mutation_prob <= probability:
@@ -77,24 +79,33 @@ def gen_mutation(attributes, probability):
         set_new_gen_normalize(attributes, chosen_gen, new_gen)
 
 def multigen_mutation(attributes, probability):
+    # print(attributes)
     mutation_prob = random.uniform(min_prob, max_prob)
     # print(mutation_prob)
     if mutation_prob <= probability:
-        new_height = random.uniform(min_height, max_height)
-        new_strength, new_agility, new_expertise, new_resistance, new_hp = normalize(
-            random.uniform(min_value, max_value), 
-            random.uniform(min_value, max_value), 
-            random.uniform(min_value, max_value), 
-            random.uniform(min_value, max_value), 
-            random.uniform(min_value, max_value))
+        gen_array = [strength, agility, expertise, resistance, hp, height]
+        new_gens = random.randint(1, gens)
+        while new_gens != 0:
+            gen_to_mutate = random.randint(0, len(gen_array) - 1)
+            new_gen_value = random.uniform(min_value, max_value)
+            set_new_gen_normalize(attributes, gen_array.pop(gen_to_mutate), new_gen_value)
+            new_gens -= 1
+
+        # new_height = random.uniform(min_height, max_height)
+        # new_strength, new_agility, new_expertise, new_resistance, new_hp = normalize(
+        #     random.uniform(min_value, max_value), 
+        #     random.uniform(min_value, max_value), 
+        #     random.uniform(min_value, max_value), 
+        #     random.uniform(min_value, max_value), 
+        #     random.uniform(min_value, max_value))
     
         # print(new_strength, new_agility, new_expertise, new_resistance, new_hp)
         # print(new_strength + new_agility + new_expertise + new_resistance + new_hp)
 
 
-        attributes.set_strength(new_strength)
-        attributes.set_agility(new_agility)
-        attributes.set_expertise(new_expertise)
-        attributes.set_resistance(new_resistance)
-        attributes.set_hp(new_hp)
-        attributes.set_height(new_height)
+        # attributes.set_strength(new_strength)
+        # attributes.set_agility(new_agility)
+        # attributes.set_expertise(new_expertise)
+        # attributes.set_resistance(new_resistance)
+        # attributes.set_hp(new_hp)
+        # attributes.set_height(new_height)
