@@ -20,74 +20,175 @@ def population_fitness(generation):
     return population_fitnesses, total_fitness
 
 def accumulated_population_fitness(generation):
-    population_fitness, total_fitness = population_fitness(generation)
+    population_fitnesses, total_fitness = population_fitness(generation)
     accumulated_fitnesses = []
     relative_fitness = []
     sum_accumulated_fitnesses = 0
 
-    for i in range(len(population_fitness)):        
-        relative_fitness[i] += (population_fitness[i]/total_fitness)
+    for i in range(len(population_fitnesses)):        
+        relative_fitness.append(population_fitnesses[i]/total_fitness)
         sum_accumulated_fitnesses += relative_fitness[i]
-        accumulated_fitnesses[i] += sum_accumulated_fitnesses
+        accumulated_fitnesses.append(sum_accumulated_fitnesses)
     
     return accumulated_fitnesses,relative_fitness, sum_accumulated_fitnesses
 
 def elite_selection(population, max_population):
-    
-
     if (len(population) <= max_population):
         return population
 
-    population_fitnesses, total_fitness = population_fitness(population)
-
-    array = [(population[i], population_fitnesses[i]) for i in range(len(population))]
-    array.sort(key=lambda x:x[1])
+    population.sort()
 
     next_gen = []
-    aux = 0
-    for i in range(len(array)):
-        for _ in math.ceil((max_population - i)/len(array)):
-            next_gen[aux] = array[i][0]
-            aux += 1
+    
+    for i in range(len(population)):
+        for _ in range(math.ceil((max_population - i)/len(population))):
+            next_gen.append(population[len(population) - i - 1])
 
     return next_gen
 
 def roulette_selection(population, max_population):
     next_gen = []
     accumulated_fitnesses,relative_fitness, sum_accumulated_fitnesses = accumulated_population_fitness(population)
-    chosen = [False] * len(population)
 
 
     while (len(next_gen) < max_population):
         random_number = random.random()
 
         for i in range(len(population)):
-            if(random_number <= accumulated_fitnesses[i] and not chosen[i]):
+            if(random_number <= accumulated_fitnesses[i]):
                 next_gen.append(population[i])
-                chosen[i] = True
                 break
             
     return next_gen
 
-#Chequear si funciona bien este
 def universal_selection(population, max_population):
     next_gen = []
     accumulated_fitnesses,relative_fitness, sum_accumulated_fitnesses = accumulated_population_fitness(population)
-    chosen = [False] * len(population)
+
+    j=0
+    r = random.random()
+    while (len(next_gen) < max_population):
+        random_number = (r+j)/max_population
+        for i in range(len(population)):
+            if(random_number <= accumulated_fitnesses[i]):
+                next_gen.append(population[i])
+                j+=1
+                break
+
+    return next_gen
+
+def ranking_selection(population, max_population):
+    next_gen = []
+    population_fitnesses, total_fitness = population_fitness(population)
+
+    population_fitnesses.sort()
+
+    new_fitnesses = []
+    for i in range(len(population)):
+        new_fitnesses.append((population_fitnesses.index(population[i].get_fitness())-1)/len(population))
+
+    accumulated_fitnesses = []
+    relative_fitness = []
+    sum_accumulated_fitnesses = 0
+
+    for i in range(len(new_fitnesses)):        
+        relative_fitness.append(new_fitnesses[i]/total_fitness)
+        sum_accumulated_fitnesses += relative_fitness[i]
+        accumulated_fitnesses.append(sum_accumulated_fitnesses)
 
 
     while (len(next_gen) < max_population):
-        r = random.random()
-        random_number = (r+len(next_gen))/max_population
+        random_number = random.random()
         for i in range(len(population)):
-            if(random_number <= accumulated_fitnesses[i] and not chosen[i]):
+            if(random_number <= accumulated_fitnesses[i]):
                 next_gen.append(population[i])
-                chosen[i] = True
                 break
             
     return next_gen
 
-# def ranking_selection(population, max_population):
+def prob_tournament_selection(population, max_population):
+    threshold = 1 - random.uniform(0,0.5)
+    new_gen = []
+
+    while len(population) > 1 and len(new_gen) < max_population:
+        chosen = [(i < 2) for i in range(0, len(population))]
+        random.shuffle(chosen)
+        aux = []
+        for i in range(len(population)):
+            if chosen[i]:
+                aux.append[population[i]]
+        
+        aux.sort()
+        r = random.random()
+        winner = aux[1 if r < threshold else 0]
+        new_gen.append(winner)
+        population.remove(winner)
+    
+    if len(population) == 1:
+        new_gen.append(population[0])
+
+    population.clear()    
+
+    return new_gen
+
+def det_tournament_selection(population, max_population):
+
+    if len(population) <= max_population:
+        return population
+    
+    inds_per_tournament =  math.ceil(len(population) / 2.0)
+    new_gen = []
+
+    for i in range(0, max_population):
+        chosen = [(i < inds_per_tournament) for i in range(0, len(population))]
+        random.shuffle(chosen)
+        aux = []
+
+        for i in range(0, len(population)):
+            if chosen[i]:
+                aux.append(population[i])
+
+        aux.sort()
+        winner = aux[len(aux)-1]
+        new_gen.append(winner)
+        population.remove(winner)
+
+    return new_gen
+
+def boltzmann_selection(population, max_population, k, n, tc, to):
+    temperature = tc + (to - tc )*math.exp(-k*n)
+    exp_values = []
+    average = 0
+
+    for individual in population:
+        aux = math.exp(individual.get_fitness()/temperature)
+        exp_values.append(aux)
+        average += aux
+
+    average = average/len(population)
+    for i in range(len(exp_values)):
+        exp_values[i] = exp_values[i]/average
+
+    next_gen = []
+    chosen = [False] * len(population)
+
+    while (len(next_gen) < max_population):
+        random_number = random.random()
+
+        for i in range(len(population)):
+            if(random_number <= exp_values[i] and not chosen[i]):
+                next_gen.append(population[i])
+                chosen[i] = True
+                break
+
+    return next_gen
+            
+
+        
+
+
+
+
 
 
 

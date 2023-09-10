@@ -35,7 +35,11 @@ selection_functions = {
     "no" : selection.no_selection,
     "elite" : selection.elite_selection,
     "roulette": selection.roulette_selection,
-    "universal": selection.universal_selection
+    "universal": selection.universal_selection,
+    "prob_tournament": selection.prob_tournament_selection,
+    "det_tournament": selection.det_tournament_selection,
+    "boltzmann": selection.boltzmann_selection,
+    "ranking": selection.ranking_selection
 }
 
 if __name__ == "__main__": 
