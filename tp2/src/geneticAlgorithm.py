@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 POINTS = 150
 
@@ -78,14 +79,24 @@ def replace_traditional(parents, children, N):
     c_len = len(children)-1
     p = 0
     c = 0
-    while(p+c < N):
+    while(p+c < N and c_len-c >= 0 and p_len-p >= 0):
         if(children[c_len-c] >= parents[p_len-p]):
             c += 1
             new_gen.append(children.pop())
         else:
             p += 1
             new_gen.append(parents.pop())
+
+    if c_len-c >= 0:
+        while(p+c < N):
+            c += 1
+            new_gen.append(children.pop())
     
+    if p_len-p >= 0:
+        while(p+c < N):
+            p += 1
+            new_gen.append(parents.pop())
+
     return new_gen 
 
 def replace_young(parents, children, N):
@@ -106,12 +117,12 @@ def replace_young(parents, children, N):
     
     return new_gen
 
-def geneticAlgorithm (gen_0, N, mutation_probablity, 
-                      mutation, K, A, B,
+def geneticAlgorithm (gen, N, K, A, B,
+                      mutation, mutation_probablity, 
                       selection_1, selection_2, crossover):
     
-    parents_1 = selection_1(gen_0, np.round(K*A))
-    parents_2 = selection_2(gen_0, np.round(K*(1-A)))
+    parents_1 = selection_1(gen, np.round(K*A))
+    parents_2 = selection_2(gen, np.round(K*(1-A)))
     parents = parents_1 + parents_2
 
     children = crossover(parents)
@@ -123,3 +134,68 @@ def geneticAlgorithm (gen_0, N, mutation_probablity,
     new_gen_2 = replace_young(parents, children, np.round(N*(1-B)))
 
     return new_gen_1 + new_gen_2
+
+def max_generations (cut_condition, gen, N, K, A, B,
+                      mutation, mutation_probablity, 
+                      selection_1, selection_2, crossover):
+    count = 0
+    while(count < cut_condition):
+        gen = geneticAlgorithm(gen, N, K, A, B,
+                               mutation, mutation_probablity, 
+                               selection_1, selection_2, crossover)
+        count += 1
+    
+    return gen
+
+def max_time (cut_condition, gen, N, K, A, B,
+                      mutation, mutation_probablity, 
+                      selection_1, selection_2, crossover):
+    count = time.time()
+    while(time.time()-count < cut_condition):
+        gen = geneticAlgorithm(gen, N, K, A, B,
+                               mutation, mutation_probablity, 
+                               selection_1, selection_2, crossover)
+    
+    return gen
+
+def content (cut_condition, gen, N, K, A, B,
+                      mutation, mutation_probablity, 
+                      selection_1, selection_2, crossover):
+    gen.sort()
+    best_fitness = gen[N-1].get_fitness()
+    count = 0
+
+    while(count < cut_condition):
+        gen = geneticAlgorithm(gen, N, K, A, B,
+                               mutation, mutation_probablity, 
+                               selection_1, selection_2, crossover)
+        gen.sort()
+        aux = gen[N-1].get_fitness()
+        if np.round(best_fitness) == np.round(aux):
+            count += 1
+        best_fitness = aux
+    
+    return gen
+
+#change
+def structure (percentage, generations, genes, gen, N, K, A, B,
+                      mutation, mutation_probablity, 
+                      selection_1, selection_2, crossover):
+    pass
+    gen = geneticAlgorithm(gen, N, K, A, B,
+                        mutation, mutation_probablity, 
+                        selection_1, selection_2, crossover)
+
+
+def optimum (cut_condition, gen, N, K, A, B,
+                      mutation, mutation_probablity, 
+                      selection_1, selection_2, crossover):
+
+    while(1):
+        gen = geneticAlgorithm(gen, N, K, A, B,
+                               mutation, mutation_probablity, 
+                               selection_1, selection_2, crossover)
+        gen.sort()
+        best_fitness = gen[N-1].get_fitness()
+        if best_fitness >= cut_condition:
+            return gen
