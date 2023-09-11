@@ -181,10 +181,41 @@ def content (cut_condition, gen, N, K, A, B,
 def structure (percentage, generations, genes, gen, N, K, A, B,
                       mutation, mutation_probablity, 
                       selection_1, selection_2, crossover):
-    pass
-    gen = geneticAlgorithm(gen, N, K, A, B,
+    percentage = np.round(N*percentage)
+    count = 0
+    while count < generations:
+        values = []
+        for ind in gen:
+            att = ind.get_attributes().get_all()
+            aux = 0
+            mult = 100
+            for i in range(1,6):
+                aux += np.round(att[i]) * mult * genes[i]
+                mult = mult * 1000
+            val = np.round(att[0] * 10) * genes[0] + aux
+            values.append(val)
+        values.sort()
+
+        aux = 0
+        aux_value = values[0]
+        for i in range(1,N):
+            if aux >= percentage:
+                count +=1
+                break
+            if values[i] == aux_value:
+                aux += 1
+            else:
+                aux = 0
+                aux_value = values[i]
+        
+        if aux < percentage:
+            count = 0
+
+        gen = geneticAlgorithm(gen, N, K, A, B,
                         mutation, mutation_probablity, 
                         selection_1, selection_2, crossover)
+
+    return gen   
 
 
 def optimum (cut_condition, gen, N, K, A, B,
