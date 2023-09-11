@@ -184,7 +184,6 @@ def content (cut_condition, gen, N, K, A, B,
     
     return gen
 
-#change
 def structure (percentage, generations, genes, gen, N, K, A, B,
                       mutation, mutation_probablity, 
                       selection_1, selection_2, crossover, metadata):
@@ -204,7 +203,7 @@ def structure (percentage, generations, genes, gen, N, K, A, B,
             values.append(val)
         values.sort()
 
-        aux = 0
+        aux = 1
         aux_value = values[0]
         for i in range(1,N):
             if aux >= percentage:
@@ -213,7 +212,7 @@ def structure (percentage, generations, genes, gen, N, K, A, B,
             if values[i] == aux_value:
                 aux += 1
             else:
-                aux = 0
+                aux = 1
                 aux_value = values[i]
         
         if aux < percentage:
