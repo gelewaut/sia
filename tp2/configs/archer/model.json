@@ -1,0 +1,19 @@
+{
+    "class": "archer",
+    "N": 20,
+    "K": 8,
+    "A": 0.3,
+    "B": 0.6,
+    "mutation_probability": 0.5,
+    "mutation": "simple",
+    "selection_1": "boltzmann",
+    "selection_2": "roulette",
+    "crossover": "one_point",
+    "cut_method": "generations",
+    "cut_condition": 10,
+    "metadata": {
+        "k": 100,
+        "to": 20,
+        "tc": 10
+    }
+}

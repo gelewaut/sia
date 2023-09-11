@@ -116,7 +116,7 @@ def prob_tournament_selection(population, max_population, metadata):
         aux = []
         for i in range(len(population)):
             if chosen[i]:
-                aux.append[population[i]]
+                aux.append(population[i])
         
         aux.sort()
         r = random.random()
