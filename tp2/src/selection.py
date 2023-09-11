@@ -2,7 +2,7 @@ import numpy
 import math
 import random
 
-def no_selection(population, max_population):
+def no_selection(population, max_population, metadata):
     parents = []
     population.sort()
     for _ in range(max_population):
@@ -32,7 +32,7 @@ def accumulated_population_fitness(generation):
     
     return accumulated_fitnesses,relative_fitness, sum_accumulated_fitnesses
 
-def elite_selection(population, max_population):
+def elite_selection(population, max_population, metadata):
     if (len(population) <= max_population):
         return population
 
@@ -46,7 +46,7 @@ def elite_selection(population, max_population):
 
     return next_gen
 
-def roulette_selection(population, max_population):
+def roulette_selection(population, max_population, metadata):
     next_gen = []
     accumulated_fitnesses,relative_fitness, sum_accumulated_fitnesses = accumulated_population_fitness(population)
 
@@ -61,7 +61,7 @@ def roulette_selection(population, max_population):
             
     return next_gen
 
-def universal_selection(population, max_population):
+def universal_selection(population, max_population, metadata):
     next_gen = []
     accumulated_fitnesses,relative_fitness, sum_accumulated_fitnesses = accumulated_population_fitness(population)
 
@@ -77,7 +77,7 @@ def universal_selection(population, max_population):
 
     return next_gen
 
-def ranking_selection(population, max_population):
+def ranking_selection(population, max_population, metadata):
     next_gen = []
     population_fitnesses, total_fitness = population_fitness(population)
 
@@ -106,7 +106,7 @@ def ranking_selection(population, max_population):
             
     return next_gen
 
-def prob_tournament_selection(population, max_population):
+def prob_tournament_selection(population, max_population, metadata):
     threshold = 1 - random.uniform(0,0.5)
     new_gen = []
 
@@ -131,7 +131,7 @@ def prob_tournament_selection(population, max_population):
 
     return new_gen
 
-def det_tournament_selection(population, max_population):
+def det_tournament_selection(population, max_population, metadata):
 
     if len(population) <= max_population:
         return population
@@ -155,7 +155,12 @@ def det_tournament_selection(population, max_population):
 
     return new_gen
 
-def boltzmann_selection(population, max_population, k, n, tc, to):
+#metadata = k, tc, to, n
+def boltzmann_selection(population, max_population, metadata):
+    tc = metadata["tc"]
+    to = metadata["to"]
+    k = metadata["k"]
+    n = metadata["gen_num"]
     temperature = tc + (to - tc )*math.exp(-k*n)
     exp_values = []
     average = 0

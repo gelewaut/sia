@@ -56,6 +56,7 @@ if __name__ == "__main__":
         selection_1 = selection_functions[config["selection_1"]]
         selection_2 = selection_functions[config["selection_2"]]
         crossover = cross_functions[config["crossover"]]
+        metadata = config["metadata"]
 
         for i in range(N):
             height = random.uniform(min_height, max_height)
@@ -77,18 +78,18 @@ if __name__ == "__main__":
             cut_condition = config["cut_condition"]
             population = gen.max_generations(cut_condition, population, N, K, A, B,
                                          mutation_1, mutation_probability,
-                                         selection_1, selection_2, crossover)
+                                         selection_1, selection_2, crossover, metadata)
         if config["cut_method"] == "max_time":
             cut_condition = config["cut_condition"]
             population = gen.max_time(cut_condition, population, N, K, A, B,
                                          mutation_1, mutation_probability,
-                                         selection_1, selection_2, crossover)
+                                         selection_1, selection_2, crossover, metadata)
         
         if config["cut_method"] == "content":
             cut_condition = config["cut_condition"]
             population = gen.content(cut_condition, population, N, K, A, B,
                                          mutation_1, mutation_probability,
-                                         selection_1, selection_2, crossover)
+                                         selection_1, selection_2, crossover, metadata)
         
         if config["cut_method"] == "structure":
             percentage = config["cut_condition"]["percentage"]
@@ -97,13 +98,13 @@ if __name__ == "__main__":
             genes = [aux["height"], aux["strength"], aux["agility"], aux["expertise"], aux["resistance"], aux["hp"]]
             population = gen.structure(percentage, generations, genes, population, N, K, A, B,
                                          mutation_1, mutation_probability,
-                                         selection_1, selection_2, crossover)
+                                         selection_1, selection_2, crossover, metadata)
         
         if config["cut_method"] == "optimum":
             cut_condition = config["cut_condition"]
             population = gen.optimum(cut_condition, population, N, K, A, B,
                                          mutation_1, mutation_probability,
-                                         selection_1, selection_2, crossover)
+                                         selection_1, selection_2, crossover, metadata)
         
         population.sort()
         for i in population:

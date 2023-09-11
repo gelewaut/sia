@@ -6,9 +6,14 @@
     "B": 1,
     "mutation_probability": 0.5,
     "mutation": "multi",
-    "selection_1": "no",
+    "selection_1": "boltzmann",
     "selection_2": "no",
     "crossover": "one_point",
     "cut_method": "optimum",
-    "cut_condition": 41
+    "cut_condition": 41,
+    "metadata": {
+        "k": 100,
+        "to": 20,
+        "tc": 10
+    }
 }

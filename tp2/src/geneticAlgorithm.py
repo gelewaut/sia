@@ -119,10 +119,9 @@ def replace_young(parents, children, N):
 
 def geneticAlgorithm (gen, N, K, A, B,
                       mutation, mutation_probablity, 
-                      selection_1, selection_2, crossover):
-    
-    parents_1 = selection_1(gen, np.round(K*A))
-    parents_2 = selection_2(gen, np.round(K*(1-A)))
+                      selection_1, selection_2, crossover, metadata):
+    parents_1 = selection_1(gen, np.round(K*A), metadata)
+    parents_2 = selection_2(gen, np.round(K*(1-A)), metadata)
     parents = parents_1 + parents_2
 
     children = crossover(parents)
@@ -137,52 +136,61 @@ def geneticAlgorithm (gen, N, K, A, B,
 
 def max_generations (cut_condition, gen, N, K, A, B,
                       mutation, mutation_probablity, 
-                      selection_1, selection_2, crossover):
+                      selection_1, selection_2, crossover, metadata):
     count = 0
     while(count < cut_condition):
+        metadata["gen_num"] = count
         gen = geneticAlgorithm(gen, N, K, A, B,
                                mutation, mutation_probablity, 
-                               selection_1, selection_2, crossover)
+                               selection_1, selection_2, crossover, metadata)
         count += 1
     
     return gen
 
 def max_time (cut_condition, gen, N, K, A, B,
                       mutation, mutation_probablity, 
-                      selection_1, selection_2, crossover):
-    count = time.time()
-    while(time.time()-count < cut_condition):
+                      selection_1, selection_2, crossover, metadata):
+    timer = time.time()
+    gen_num = 0
+    while(time.time()-timer < cut_condition):
+        metadata["gen_num"] = gen_num
         gen = geneticAlgorithm(gen, N, K, A, B,
                                mutation, mutation_probablity, 
-                               selection_1, selection_2, crossover)
+                               selection_1, selection_2, crossover, metadata)
+        gen_num += 1
     
     return gen
 
 def content (cut_condition, gen, N, K, A, B,
                       mutation, mutation_probablity, 
-                      selection_1, selection_2, crossover):
+                      selection_1, selection_2, crossover, metadata):
     gen.sort()
     best_fitness = gen[N-1].get_fitness()
     count = 0
-
+    gen_num = 0
     while(count < cut_condition):
+        metadata["gen_num"] = gen_num
         gen = geneticAlgorithm(gen, N, K, A, B,
                                mutation, mutation_probablity, 
-                               selection_1, selection_2, crossover)
+                               selection_1, selection_2, crossover, metadata)
         gen.sort()
         aux = gen[N-1].get_fitness()
         if np.round(best_fitness) == np.round(aux):
             count += 1
+        else:
+            count = 0
         best_fitness = aux
+        gen_num += 1
     
     return gen
 
 #change
 def structure (percentage, generations, genes, gen, N, K, A, B,
                       mutation, mutation_probablity, 
-                      selection_1, selection_2, crossover):
+                      selection_1, selection_2, crossover, metadata):
     percentage = np.round(N*percentage)
     count = 0
+    gen_num = 0
     while count < generations:
         values = []
         for ind in gen:
@@ -211,21 +219,26 @@ def structure (percentage, generations, genes, gen, N, K, A, B,
         if aux < percentage:
             count = 0
 
+        metadata["gen_num"] = gen_num
         gen = geneticAlgorithm(gen, N, K, A, B,
                         mutation, mutation_probablity, 
-                        selection_1, selection_2, crossover)
+                        selection_1, selection_2, crossover, metadata)
+        gen_num += 1
 
     return gen   
 
 
 def optimum (cut_condition, gen, N, K, A, B,
                       mutation, mutation_probablity, 
-                      selection_1, selection_2, crossover):
+                      selection_1, selection_2, crossover, metadata):
 
+    gen_num = 0
     while(1):
+        metadata["gen_num"] = gen_num
         gen = geneticAlgorithm(gen, N, K, A, B,
                                mutation, mutation_probablity, 
-                               selection_1, selection_2, crossover)
+                               selection_1, selection_2, crossover, metadata)
+        gen_num += 1
         gen.sort()
         best_fitness = gen[N-1].get_fitness()
         if best_fitness >= cut_condition:
