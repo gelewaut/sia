@@ -155,7 +155,6 @@ def det_tournament_selection(population, max_population, metadata):
 
     return new_gen
 
-#metadata = k, tc, to, n
 def boltzmann_selection(population, max_population, metadata):
     tc = metadata["tc"]
     to = metadata["to"]

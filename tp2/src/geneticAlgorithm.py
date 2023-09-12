@@ -60,16 +60,6 @@ def normalize(strength, agility, expertise, resistance, hp):
     return [strength, agility, expertise, resistance, hp]
 
 
-# poblacion 0
-# N
-# probablidad de mutar
-# K 
-# A
-# B
-# metodo seleccion 1
-# metodo seleccion 2
-# cruce
-# rempazo
 
 def replace_traditional(parents, children, N):
     parents.sort()

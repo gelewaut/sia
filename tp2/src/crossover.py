@@ -47,9 +47,6 @@ def one_point_cross(parents):
     return children
 
 def two_point_cross(parents):
-    # print(parents.pop())
-    # print(len(parents))
-    # print(parents)
     parents_dim = len(parents)
     children = []
     index = 0
@@ -58,8 +55,6 @@ def two_point_cross(parents):
         children.append(create_child(odd_parent, get_attributes(odd_parent.get_attributes().get_all())))
         index += 1
     while parents_dim != 0:
-        # print(parents_dim)
-        # print(parents)
         parents_dim -= 2
         parent1 = parents[index]
         index += 1
@@ -67,42 +62,27 @@ def two_point_cross(parents):
         index += 1
         parent1_attributes = parent1.get_attributes().get_all()
         parent2_attributes = parent2.get_attributes().get_all()
-        p1 = -1     #para que entren al while  
-        p2 = -2     #por primera vez
+        p1 = -1      
+        p2 = -2     
         while p1 > p2:
             p1 = random.randint(0, 5)
             p2 = random.randint(0, 5)
-            # print('---------------------------')
-            # print('p1 = ', p1)
-            # print('p2 = ', p2)
         if (p1 + p2) <= 6:
             mid = 6 - (p1 + p2)
         else:
             mid = p2 - p1
-        # print('mid = ', mid)
-        # print('-----------------------')
         child1_attributes = []
         child2_attributes = []
         i = 0
         while i < p1:
-            # print(i)
-            # print('p1 = ', p1)
-            # print('----------------------------')
             child1_attributes.append(parent1_attributes[i])
             child2_attributes.append(parent2_attributes[i])
             i += 1
         while (i - p1) < mid:
-            # print(i)
-            # print('mid = ', mid)
-            # print('----------------------------')
             child1_attributes.append(parent2_attributes[i])
             child2_attributes.append(parent1_attributes[i])
             i += 1    
         while i < 6:
-            # print(i)
-            # print('i - p1 - mid = ', i - p1 - mid)
-            # print('p2 = ', p2)
-            # print('----------------------------')
             child1_attributes.append(parent1_attributes[i])
             child2_attributes.append(parent2_attributes[i])
             i += 1

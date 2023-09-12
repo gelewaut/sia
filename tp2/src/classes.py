@@ -132,12 +132,4 @@ class Spy(Character):
     def __str__(self) -> str:
         return f"Spy {super().__str__()}"
 
-
-    # def __eq__(self, other):
-    #     if not isinstance(other, self.__class__):
-    #         return False
-    #     return (self.board == other.board).all()
-
-    # def __hash__(self):
-    #     return hash(str(self.board))
     
