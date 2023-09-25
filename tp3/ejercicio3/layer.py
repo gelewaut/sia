@@ -34,7 +34,6 @@ class Layer():
         for j in range(self.nodes_dim):
             aux = 0
             for k in range(len(last_excitations)):
-                #checkear ji o ij
                 aux += weights[j][k] * last_excitations[k]
             results.append(aux)
         
