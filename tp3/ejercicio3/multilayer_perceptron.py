@@ -5,12 +5,14 @@ import random
 
 class MultilayerPerceptron():
 
-    def __init__(self, layers, weights, targets, error_function, error_derivative):
+    def __init__(self, layers, weights, targets, error_function, error_derivative, epochs, error_wanted):
         self.layers = layers
         self.weights = weights
         self.targets = targets
         self.error_function = error_function
         self.error_derivative = error_derivative
+        self.epochs = epochs
+        self.error_wanted = error_wanted
 
     def get_weights(self):
         return self.weights
@@ -84,6 +86,16 @@ class MultilayerPerceptron():
             result += (real_values[i] - expected_values[i]) ** 2
         result *= (1 / n)
 
+    def get_error(real_outputs, expected_outputs):
+        error = 0
+        for i in range(len(real_outputs)):
+            error += (real_outputs[i] - expected_outputs[i])**2
+        error /= 2
+        return error
+
+    # def train(self):
+    #     error = -1
+    #     epochs = self.epochs
+    #     while epochs != 0 and error > self.error_wanted:
 
 
-    # def train(layers, activation_function, activation_derivative, expected_values, error_function):
