@@ -34,6 +34,7 @@ class Layer():
         results = []
         for excitation in self.excitations:
             results.append(self.activation_derivative(excitation))
+        # print(results)
         return results
 
     def calculate_excitations(self, weights, last_activations):

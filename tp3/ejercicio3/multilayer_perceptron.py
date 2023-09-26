@@ -39,10 +39,8 @@ class MultilayerPerceptron():
             for j in range(self.layers[m + 1].nodes_dim):
                 new_weights[m].append(copy.copy(empty_row))
                 for k in range(self.layers[m].nodes_dim):
-                    new_weights[m][j].append(random.uniform(0.1, 0.5))
+                    new_weights[m][j].append(random.uniform(-1, 1))
         self.weights = new_weights
-        # print(new_weights)
-        # print(new_weights)
         #weights = self.get_weights()
         #for weight_col in weights:
         #    for weight in weight_col:
@@ -61,12 +59,8 @@ class MultilayerPerceptron():
         self.layers[0].set_activations(self.inputs)
         last_activations = self.get_inputs()
         for m in range(1, len(self.layers)):
-            # print(m)
             self.layers[m].calculate_activations(self.weights[m - 1], last_activations)
             last_activations = self.layers[m].get_activations()
-            # print('------------------------------------')
-            # print(last_activations)
-            # print('------------------------------------')
 
     def calculate_output_gradients(self, output_layer):
         gradients = []
@@ -88,8 +82,6 @@ class MultilayerPerceptron():
         return gradients
 
     def calculate_gradients(self, layers, weights):
-        # columns = max(self.layers, key=lambda layer: layer.nodes_dim).nodes_dim
-        # gradients_by_layer = np.zeros((len(self.layers) - 1, columns), dtype=float)
         last_layer = layers[len(layers) - 1]
         gradients_by_layer = []
         empty_row = []
@@ -101,7 +93,6 @@ class MultilayerPerceptron():
         while m >= 0:
             gradients_by_layer[m] = self.calculate_layer_gradients(layers[m + 1], gradients_by_layer[m + 1], weights[m + 1], layers[m + 2].nodes_dim)
             m -= 1
-        print(gradients_by_layer)
         return gradients_by_layer
 
     def back_propagation(self):
@@ -110,9 +101,6 @@ class MultilayerPerceptron():
             for j in range(self.layers[m + 1].nodes_dim):
                 for k in range(self.layers[m].nodes_dim):
                     self.weights[m][j][k] += self.apprentice_rate * gradients[m][j] * self.layers[m].get_activations()[k]
-                    
-                    # print(self.apprentice_rate * gradients[m][j] * self.layers[m].get_activations()[k])
-                    # print( gradients[m][j] )
 
     def mean_squared_error(self, n, real_output, target_output):
         result = 0
@@ -122,8 +110,12 @@ class MultilayerPerceptron():
 
     def get_error(self):
         error = 0
-        for i in range(len(self.target)):
-            error += (self.layers[len(self.layers)-1].get_activations()[i] - self.target[i])**2
+        for i in range(len(self.targets)):
+            self.inputs = self.examples[i]
+            self.forward_propagation()
+            for j in range(len(self.targets[i])):
+                error += (self.layers[len(self.layers)-1].get_activations()[j] - self.targets[i][j])**2
+                # print(self.layers[len(self.layers)-1].activations)
         error /= 2
         return error
 
@@ -132,41 +124,23 @@ class MultilayerPerceptron():
         epochs = self.epochs
         min_error = sys.maxsize
         self.initialize_weights()
-        # print("pesos antes de train: ", self.weights)
         while epochs != 0 and min_error > self.error_wanted:
             example = random.randint(0, len(self.examples)-1)
             self.inputs = self.examples[example]
-            # print(self.inputs)
-            # print(self.inputs)
             self.target = self.targets[example]
             self.forward_propagation()
-            # print('---------------------------------')
-            # print(example)
-            # print('---------------------------------')
-            # print('output activations:')
-            # print(self.layers[11].activations)
-            # print('---------------------------------')
-
             self.back_propagation()
             error = self.get_error()
-            # print("error actual: ", error)
-            # print("error minimo: ", min_error)
-            # print(epochs)
             if error < min_error:
                 min_error = error
                 self.weights_min = self.weights
             epochs -= 1
-        # print(epochs)
 
     def test(self, inputs):
         self.inputs = inputs
         self.weights = self.weights_min
         self.forward_propagation()
-        print('---------------------------------')
-
-        print(self.layers[len(self.layers) - 1].get_activations())
-        print('---------------------------------')
-
+        print(self.layers[len(self.layers) - 1].activations)
         return self.layers[len(self.layers) - 1]
 
             
