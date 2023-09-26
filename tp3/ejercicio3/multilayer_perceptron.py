@@ -41,6 +41,8 @@ class MultilayerPerceptron():
                 for k in range(self.layers[m].nodes_dim):
                     new_weights[m][j].append(random.uniform(0.1, 0.5))
         self.weights = new_weights
+        # print(new_weights)
+        # print(new_weights)
         #weights = self.get_weights()
         #for weight_col in weights:
         #    for weight in weight_col:
@@ -56,11 +58,15 @@ class MultilayerPerceptron():
     #     return result
 
     def forward_propagation(self):
+        self.layers[0].set_activations(self.inputs)
         last_activations = self.get_inputs()
         for m in range(1, len(self.layers)):
-            print(m)
+            # print(m)
             self.layers[m].calculate_activations(self.weights[m - 1], last_activations)
-            last_activations = self.layers[m - 1].get_activations()
+            last_activations = self.layers[m].get_activations()
+            # print('------------------------------------')
+            # print(last_activations)
+            # print('------------------------------------')
 
     def calculate_output_gradients(self, output_layer):
         gradients = []
@@ -95,15 +101,17 @@ class MultilayerPerceptron():
         while m >= 0:
             gradients_by_layer[m] = self.calculate_layer_gradients(layers[m + 1], gradients_by_layer[m + 1], weights[m + 1], layers[m + 2].nodes_dim)
             m -= 1
+        print(gradients_by_layer)
         return gradients_by_layer
 
     def back_propagation(self):
-        self.layers[0].set_activations(self.inputs)
         gradients = self.calculate_gradients(self.layers, self.weights)
         for m in range(len(self.layers) - 1):
             for j in range(self.layers[m + 1].nodes_dim):
                 for k in range(self.layers[m].nodes_dim):
                     self.weights[m][j][k] += self.apprentice_rate * gradients[m][j] * self.layers[m].get_activations()[k]
+                    
+                    # print(self.apprentice_rate * gradients[m][j] * self.layers[m].get_activations()[k])
                     # print( gradients[m][j] )
 
     def mean_squared_error(self, n, real_output, target_output):
@@ -128,23 +136,37 @@ class MultilayerPerceptron():
         while epochs != 0 and min_error > self.error_wanted:
             example = random.randint(0, len(self.examples)-1)
             self.inputs = self.examples[example]
-            print(self.inputs)
+            # print(self.inputs)
+            # print(self.inputs)
             self.target = self.targets[example]
             self.forward_propagation()
+            # print('---------------------------------')
+            # print(example)
+            # print('---------------------------------')
+            # print('output activations:')
+            # print(self.layers[11].activations)
+            # print('---------------------------------')
+
             self.back_propagation()
             error = self.get_error()
             # print("error actual: ", error)
             # print("error minimo: ", min_error)
+            # print(epochs)
             if error < min_error:
                 min_error = error
                 self.weights_min = self.weights
             epochs -= 1
-        print(epochs)
+        # print(epochs)
 
     def test(self, inputs):
         self.inputs = inputs
+        self.weights = self.weights_min
         self.forward_propagation()
+        print('---------------------------------')
+
         print(self.layers[len(self.layers) - 1].get_activations())
+        print('---------------------------------')
+
         return self.layers[len(self.layers) - 1]
 
             
