@@ -62,6 +62,7 @@ def main():
         weighted_sum2 = np.dot(test_inputs[i], final_weights2[1:]) + final_weights2[0]
         prediction2 = step_function(weighted_sum2)
         print(f"Input: {test_inputs[i]}, Predicted Class: {prediction2}")
+    print(final_weights2)
     
 if __name__ == "__main__":
     main()
