@@ -11,15 +11,16 @@ def error_function(calculated, targets):
     return squared_diff.mean()  # Average squared error
 
 # Perceptron training function
-def train_perceptron(inputs, targets, learning_rate, epochs):
+def train_perceptron(inputs, targets, learning_rate, limit, epsilon):
     inputs_with_bias = np.insert(inputs, 0, 1, axis=1)
     
     num_samples, num_features = inputs.shape
     w = np.random.rand(num_features+1)
     min_error = sys.maxsize
     w_min = None
+    epochs = 0
     
-    for i in range(epochs):
+    while epochs < limit and min_error > epsilon:
         mu = np.random.randint(num_samples)  # Random integer between 0 and p-1
         exitement = np.dot(inputs_with_bias[mu], w)
         activation = step_function(exitement)
@@ -30,6 +31,7 @@ def train_perceptron(inputs, targets, learning_rate, epochs):
         if error < min_error:
             min_error = error
             w_min = np.copy(w)
+        epochs += 1
     return w_min
 
 def main():
@@ -41,13 +43,14 @@ def main():
     
     # Hyperparameters
     learning_rate = 0.1
-    epochs = 1000
+    limit = 1000
+    epsilon = 0.01
 
     # Train the perceptron for the AND operator
-    final_weights1 = train_perceptron(inputs, targets1, learning_rate, epochs)
+    final_weights1 = train_perceptron(inputs, targets1, learning_rate, limit, epsilon)
     
     # Train the perceptron for the XOR operator
-    final_weights2 = train_perceptron(inputs, targets2, learning_rate, epochs)
+    final_weights2 = train_perceptron(inputs, targets2, learning_rate, limit, epsilon)
 
     # Test the perceptrons
     print("For AND operator:")
