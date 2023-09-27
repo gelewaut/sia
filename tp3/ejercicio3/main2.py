@@ -30,7 +30,7 @@ if __name__ == "__main__":
             examples_b_c.append(number)
             number = [1]
 
-    test_b_c = examples_b_c[0]
+    test_b_c = examples_b_c[4]
 
     output_nodes_a = 1
     hidden_layer_nodes_a = 6
@@ -38,14 +38,15 @@ if __name__ == "__main__":
 
     output_nodes_b = 2
     hidden_layer_nodes_b = 6
-    hidden_layers_b = 2
+    hidden_layers_b = 6
 
     output_nodes_c = 10
     hidden_layer_nodes_c = 35
     hidden_layers_c = 2
 
     beta_a = 1
-    beta_b_c = 2.5e-01
+    beta_b = 1
+    beta_c = 2.5e-01
 
     epochs = 30000
     apprentice_rate = 0.1
@@ -83,7 +84,7 @@ if __name__ == "__main__":
         output_nodes = output_nodes_b
         hidden_layer_nodes = hidden_layer_nodes_b
         hidden_layers = hidden_layers_b
-        beta = beta_b_c
+        beta = beta_b
     elif exercise == "c":
         examples = examples_b_c
         targets = targets_c
@@ -91,7 +92,7 @@ if __name__ == "__main__":
         output_nodes = output_nodes_c
         hidden_layer_nodes = hidden_layer_nodes_c
         hidden_layers = hidden_layers_c
-        beta = beta_b_c
+        beta = beta_c
 
     layers = []
     for i in range(hidden_layers):
