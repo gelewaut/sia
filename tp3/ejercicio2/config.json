@@ -1,0 +1,8 @@
+{
+    "perceptron_type": "linear",
+    "apprentice_rate": 0.1,
+    "epochs": 10000,
+    "epsilon": 0.01,
+    "beta": 1.6e-1,
+    "training_percentage": 0.5
+}

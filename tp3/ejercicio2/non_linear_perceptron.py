@@ -11,41 +11,50 @@ if __name__ == "__main__":
     with open(f"{sys.argv[1]}", "r") as file:
         reader = pd.read_csv(file).values
         data = np.array([np.append(1, reader[0])])
+        minimum = data[0][len(data[0]) - 1]
+        maximum = data[0][len(data[0]) - 1]
         for i in range(1, len(reader)):
-            data = np.append(data , np.array([np.append(1, reader[i])]), axis=0)
+            aux = np.append(1, reader[i])
+            if aux[len(aux) - 1] > maximum:
+                maximum = aux[len(aux) - 1]
+            if aux[len(aux) - 1] < minimum:
+                minimum = aux[len(aux) - 1]
+            data = np.append(data , np.array([aux]), axis=0)
+
+        
         
         neuron01_1 = NonLinearPerceptron(0.1, 10000, 0.01,1.6e-01)
         neuron001_1 = NonLinearPerceptron(0.01, 10000, 0.01,1.6e-01)
         neuron0001_1 = NonLinearPerceptron(0.001, 10000, 0.01,1.6e-01)
         neuron00001_1 = NonLinearPerceptron(0.0001, 10000, 0.01,1.6e-01)
         neuron000001_1 = NonLinearPerceptron(0.00001, 10000, 0.01,1.6e-01)
-        errors01_1 = neuron01_1.train(data)
-        errors001_1 = neuron001_1.train(data)
-        errors0001_1 = neuron0001_1.train(data)
-        errors00001_1 = neuron00001_1.train(data)
-        errors000001_1 = neuron000001_1.train(data)
+        errors01_1 = neuron01_1.train(data, maximum, minimum)
+        errors001_1 = neuron001_1.train(data, maximum, minimum)
+        errors0001_1 = neuron0001_1.train(data, maximum, minimum)
+        errors00001_1 = neuron00001_1.train(data, maximum, minimum)
+        errors000001_1 = neuron000001_1.train(data, maximum, minimum)
 
         neuron01_25 = NonLinearPerceptron(0.1, 10000, 0.01,2.5e-01)
         neuron001_25 = NonLinearPerceptron(0.01, 10000, 0.01,2.5e-01)
         neuron0001_25 = NonLinearPerceptron(0.001, 10000, 0.01,2.5e-01)
         neuron00001_25 = NonLinearPerceptron(0.0001, 10000, 0.01,2.5e-01)
         neuron000001_25 = NonLinearPerceptron(0.00001, 10000, 0.01,2.5e-01)
-        errors01_25 = neuron01_25.train(data)
-        errors001_25 = neuron001_25.train(data)
-        errors0001_25 = neuron0001_25.train(data)
-        errors00001_25 = neuron00001_25.train(data)
-        errors000001_25 = neuron000001_25.train(data)
+        errors01_25 = neuron01_25.train(data, maximum, minimum)
+        errors001_25 = neuron001_25.train(data, maximum, minimum)
+        errors0001_25 = neuron0001_25.train(data, maximum, minimum)
+        errors00001_25 = neuron00001_25.train(data, maximum, minimum)
+        errors000001_25 = neuron000001_25.train(data, maximum, minimum)
 
         neuron01_5 = NonLinearPerceptron(0.1, 10000, 0.01,5e-01)
         neuron001_5 = NonLinearPerceptron(0.01, 10000, 0.01,5e-01)
         neuron0001_5 = NonLinearPerceptron(0.001, 10000, 0.01,5e-01)
         neuron00001_5 = NonLinearPerceptron(0.0001, 10000, 0.01,5e-01)
         neuron000001_5 = NonLinearPerceptron(0.00001, 10000, 0.01,5e-01)
-        errors01_5 = neuron01_5.train(data)
-        errors001_5 = neuron001_5.train(data)
-        errors0001_5 = neuron0001_5.train(data)
-        errors00001_5 = neuron00001_5.train(data)
-        errors000001_5 = neuron000001_5.train(data)
+        errors01_5 = neuron01_5.train(data, maximum, minimum)
+        errors001_5 = neuron001_5.train(data, maximum, minimum)
+        errors0001_5 = neuron0001_5.train(data, maximum, minimum)
+        errors00001_5 = neuron00001_5.train(data, maximum, minimum)
+        errors000001_5 = neuron000001_5.train(data, maximum, minimum)
         
         x_axis_generations = list(range(0, 10000))
 
