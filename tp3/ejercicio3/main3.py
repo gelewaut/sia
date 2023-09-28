@@ -1,14 +1,21 @@
 import numpy as np
+import configparser
 
 import layer2
 import multilayer_perceptron2 as mp
 
 if __name__ == "__main__":
-    exercise = "c"
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
+    exercise = config.get('General', 'exercise')
+    epochs = config.getint('General', 'epochs')
+    apprentice_rate = config.getfloat('General', 'apprentice_rate')
+    error_wanted = config.getfloat('General', 'error_wanted')
 
     examples_a = np.array([[1, -1, 1], [1, 1, -1], [1, -1, -1], [1, 1, 1]])
     targets_a = np.array([[1], [1], [-1], [-1]])
-    test_a = examples_a[1]
+    test_a = examples_a[config.getint('ExerciseA', 'test')]
 
     file = open('TP3-ej3-digitos.txt')
     lines = file.readlines()
@@ -30,27 +37,24 @@ if __name__ == "__main__":
             examples_b_c.append(number)
             number = [1]
 
-    test_b_c = examples_b_c[4]
+    test_b = examples_b_c[config.getint('ExerciseB', 'test')]
+    test_c = examples_b_c[config.getint('ExerciseC', 'test')]
 
-    output_nodes_a = 1
-    hidden_layer_nodes_a = 6
-    hidden_layers_a = 6
+    output_nodes_a = config.getint('ExerciseA', 'output_nodes')
+    hidden_layer_nodes_a = config.getint('ExerciseA', 'hidden_layer_nodes')
+    hidden_layers_a = config.getint('ExerciseA', 'hidden_layers')
 
-    output_nodes_b = 2
-    hidden_layer_nodes_b = 6
-    hidden_layers_b = 6
+    output_nodes_b = config.getint('ExerciseB', 'output_nodes')
+    hidden_layer_nodes_b = config.getint('ExerciseB', 'hidden_layer_nodes')
+    hidden_layers_b = config.getint('ExerciseB', 'hidden_layers')
 
-    output_nodes_c = 10
-    hidden_layer_nodes_c = 35
-    hidden_layers_c = 2
+    output_nodes_c = config.getint('ExerciseC', 'output_nodes')
+    hidden_layer_nodes_c = config.getint('ExerciseB', 'hidden_layer_nodes')
+    hidden_layers_c = config.getint('ExerciseB', 'hidden_layers')
 
-    beta_a = 1
-    beta_b = 1
-    beta_c = 2.5e-01
-
-    epochs = 30000
-    apprentice_rate = 0.1
-    error_wanted = 0.00001
+    beta_a = config.getfloat('ExerciseA', 'beta')
+    beta_b = config.getfloat('ExerciseB', 'beta')
+    beta_c = config.getfloat('ExerciseC', 'beta')
 
 
     def activation_function(x):
@@ -80,7 +84,7 @@ if __name__ == "__main__":
     elif exercise == "b":
         examples = examples_b_c
         targets = targets_b
-        test = test_b_c
+        test = test_b
         output_nodes = output_nodes_b
         hidden_layer_nodes = hidden_layer_nodes_b
         hidden_layers = hidden_layers_b
@@ -88,7 +92,7 @@ if __name__ == "__main__":
     elif exercise == "c":
         examples = examples_b_c
         targets = targets_c
-        test = test_b_c
+        test = test_c
         output_nodes = output_nodes_c
         hidden_layer_nodes = hidden_layer_nodes_c
         hidden_layers = hidden_layers_c
