@@ -68,11 +68,11 @@ class MultilayerPerceptron2:
         for i in range(len(self.targets)):
             self.inputs = self.examples[i]
             self.forward_propagation()
-            squared_error = np.sum((self.layers[-1].activations - self.targets[i]) ** 2)
-            error += squared_error
-
-        mean_squared_error = error / (2 * len(self.targets))
-        return mean_squared_error
+            for j in range(len(self.targets[i])):
+                error += (self.layers[len(self.layers)-1].activations[j] - self.targets[i][j])**2
+                # print(self.layers[len(self.layers)-1].activations)
+        error /= 2
+        return error
 
     def train(self):
         epochs = self.epochs
@@ -94,4 +94,5 @@ class MultilayerPerceptron2:
         self.inputs = inputs
         self.weights = self.weights_min
         self.forward_propagation()
-        print(self.layers[len(self.layers) - 1].activations)
+        # print(self.layers[len(self.layers) - 1].activations)
+

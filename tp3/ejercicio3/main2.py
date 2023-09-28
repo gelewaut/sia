@@ -2,13 +2,15 @@ import numpy as np
 
 import layer2
 import multilayer_perceptron2 as mp
+import matplotlib.pyplot as plt
+
 
 if __name__ == "__main__":
     exercise = "c"
 
     examples_a = np.array([[1, -1, 1], [1, 1, -1], [1, -1, -1], [1, 1, 1]])
     targets_a = np.array([[1], [1], [-1], [-1]])
-    test_a = examples_a[1]
+    test_a = examples_a[0]
 
     file = open('TP3-ej3-digitos.txt')
     lines = file.readlines()
@@ -30,7 +32,7 @@ if __name__ == "__main__":
             examples_b_c.append(number)
             number = [1]
 
-    test_b_c = examples_b_c[4]
+    test_b_c = examples_b_c[9]
 
     output_nodes_a = 1
     hidden_layer_nodes_a = 6
@@ -48,7 +50,7 @@ if __name__ == "__main__":
     beta_b = 1
     beta_c = 2.5e-01
 
-    epochs = 30000
+    epochs = 1000
     apprentice_rate = 0.1
     error_wanted = 0.00001
 
@@ -94,10 +96,44 @@ if __name__ == "__main__":
         hidden_layers = hidden_layers_c
         beta = beta_c
 
+    def add_noise(example):
+        noise = np.random.randint(-2, 3, size=example.shape) * 0.2
+        example_with_noise = example + noise
+        return example_with_noise
+
+
     layers = []
     for i in range(hidden_layers):
         layers.append(layer2.Layer2(hidden_layer_nodes, activation_function, activation_derivative))
     layers.append(layer2.Layer2(output_nodes, activation_function, activation_derivative))
-    perceptron = mp.MultilayerPerceptron2(layers, targets, epochs, error_wanted, examples, apprentice_rate)
-    perceptron.train()
-    perceptron.test(test)
+    
+
+    # ------------------------- GRAPHICS ----------------------------------------
+############################################################################################################################################
+################################################################################################################################################
+################################################################################################################################################
+    layers = []
+
+    nodes_axis = []
+    errors = []
+    outputs = len(layers) - 1
+
+
+    for nodes_num in range(1, 12):
+        nodes_axis.append(nodes_num/10)
+    i = 0.1
+    while i <= 1.1:
+        print(i)
+        perceptron = mp.MultilayerPerceptron2(layers, targets, epochs, error_wanted, examples, i)
+        perceptron.train()
+        perceptron.test(test)
+        print(perceptron.layers[outputs].activations[9])
+        errors.append(1 - perceptron.layers[outputs].activations[9])
+        i += 0.1
+     
+    plt.plot(nodes_axis, errors, label='Error según tasa de aprendizaje en ejercicio C', color='red', linestyle='-')
+    plt.xlabel('Tasa de aprendizaje')
+    plt.ylabel('Error')
+    plt.title("Error según nodos en las capas ocultas")
+    plt.legend()
+    plt.show()
