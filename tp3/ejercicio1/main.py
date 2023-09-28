@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import sys
 
 # Activation function
@@ -41,15 +42,17 @@ def main():
     targets2 = np.array([1, 1, -1, -1])
     test_inputs = np.array([[1, 1], [-1, -1], [-1, 1], [1, -1]])
     
+    # Verfication 
+    
     # Hyperparameters
     learning_rate = 0.1
-    limit = 1000
+    limit = 100
     epsilon = 0.01
 
     # Train the perceptron for the AND operator
     final_weights1 = train_perceptron(inputs, targets1, learning_rate, limit, epsilon)
     
-    # Train the perceptron for the XOR operator
+    # # Train the perceptron for the XOR operator
     final_weights2 = train_perceptron(inputs, targets2, learning_rate, limit, epsilon)
 
     # Test the perceptrons
@@ -66,6 +69,35 @@ def main():
         prediction2 = step_function(weighted_sum2)
         print(f"Input: {test_inputs[i]}, Predicted Class: {prediction2}")
     print(final_weights2)
+    
+    # Statistics
+    
+    # Hyperparameters
+    epsilon = 0.01
+    limits = [50, 100, 500, 1000, 10000]
+    
+    for limit in limits:
+        y = []
+        x = []
+        for step in range(0,100,2):
+            learning_rate = step/100
+            x.append(learning_rate)
+            final_weights = train_perceptron(inputs, targets1, learning_rate, limit, epsilon)
+            number_true = 0
+            for i in range(len(test_inputs)):
+                weighted_sum = np.dot(test_inputs[i], final_weights[1:]) + final_weights[0]
+                prediction = step_function(weighted_sum)
+                if (1 if sum(test_inputs[i])==2 else -1) == prediction: 
+                    number_true += 1
+            y.append(number_true/4)
+        plt.plot(x, y)
+        plt.xlabel("Learning rates")
+        plt.ylabel("Precision")
+        plt.title(f"Precison for each learning rates with a {limit} limit")
+        plt.show()
+                
+    
+    
     
 if __name__ == "__main__":
     main()
