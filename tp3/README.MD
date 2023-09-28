@@ -31,4 +31,19 @@ Definimos un archivo de configuración config.json dentro de la carpeta ejercici
 - beta: Ajuste de la funcion tanh si se utiliza un perceptron no lineal
 - training_percentage: Porcentaje de la data con la que se quiere entrenar 
 
+## Archivo de configuracion Multicapa
+exercise: ejercicio a, b o c
+epochs: cantidad de epocas
+apprentice_rate
+error_wanted
+with_noise: True o False dependiendo si se quiere usar ruido o no
+noise_rate
 
+Lo siguiente se aplica a los 3 puntos (a, b o c)
+test: Que ejemplo se quiere testear
+output_nodes: La cantidad de nodos salida
+hidden_layer_nodes: La cantidad de nodos en la capa intermedia
+hidden_layers: La cantidad de capas intermedias
+beta: El beta para la funcion de tanh
+
+Correr el archivo main del ejercicio 3 con la configuracion deseada. Se imprimiran los resultados de la capa de salida.

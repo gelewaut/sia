@@ -1,161 +1,118 @@
 import numpy as np
-import sys
-import random
+import configparser
+
+import layer
 import multilayer_perceptron as mp
-import layer 
-import copy
 
 if __name__ == "__main__":
-    number0 = [
-    0, 1, 1, 1, 0,
-    1, 0, 0, 0, 1,
-    1, 0, 0, 1, 1,
-    1, 0, 1, 0, 1,
-    1, 1, 0, 0, 1,
-    1, 0, 0, 0, 1,
-    0, 1, 1, 1, 0
-]
+    config = configparser.ConfigParser()
+    config.read('config.ini')
 
-    number1 = [
-    0, 0, 1, 0, 0, 
-    0, 1, 1, 0, 0, 
-    0, 0, 1, 0, 0, 
-    0, 0, 1, 0, 0, 
-    0, 0, 1, 0, 0, 
-    0, 0, 1, 0, 0, 
-    0, 1, 1, 1, 0 
-    ]
-    
-    number2 = [
-    0, 1, 1, 1, 0,
-    1, 0, 0, 0, 1,
-    0, 0, 0, 0, 1,
-    0, 0, 0, 1, 0,
-    0, 0, 1, 0, 0,
-    0, 1, 0, 0, 0,
-    1, 1, 1, 1, 1
-    ] 
+    exercise = config.get('General', 'exercise')
+    epochs = config.getint('General', 'epochs')
+    apprentice_rate = config.getfloat('General', 'apprentice_rate')
+    error_wanted = config.getfloat('General', 'error_wanted')
+    with_noise = config.getboolean('General', 'with_noise')
+    noise_rate = config.getfloat('General', 'noise_rate')
 
-    number3 = [
-    0, 1, 1, 1, 0,
-    1, 0, 0, 0, 1,
-    0, 0, 0, 0, 1,
-    0, 0, 1, 1, 0,
-    0, 0, 0, 0, 1,
-    1, 0, 0, 0, 1,
-    0, 1, 1, 1, 0
-    ]
-    
-    number4 = [
-    0, 0, 0, 1, 0,
-    0, 0, 1, 1, 0,
-    0, 1, 0, 1, 0,
-    1, 0, 0, 1, 0,
-    1, 1, 1, 1, 1,
-    0, 0, 0, 1, 0,
-    0, 0, 0, 1, 0
-    ]
+    examples_a = np.array([[1, -1, 1], [1, 1, -1], [1, -1, -1], [1, 1, 1]])
+    targets_a = np.array([[1], [1], [-1], [-1]])
+    test_a = examples_a[config.getint('ExerciseA', 'test')]
 
-    number5 = [
-    1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0,
-    1, 1, 1, 1, 0,
-    0, 0, 0, 0, 1,
-    0, 0, 0, 0, 1,
-    1, 0, 0, 0, 1,
-    0, 1, 1, 1, 0
-    ]
+    file = open('TP3-ej3-digitos.txt')
+    lines = file.readlines()
 
-    number6 = [
-    0, 0, 1, 1, 0,
-    0, 1, 0, 0, 0,
-    1, 0, 0, 0, 0,
-    1, 1, 1, 1, 0,
-    1, 0, 0, 0, 1,
-    1, 0, 0, 0, 1,
-    0, 1, 1, 1, 0
-    ]
+    examples_b_c = []
+    targets_b = []
+    targets_c = []
+    number = [1]
+    for i in range(len(lines)):
+        digits = lines[i].split()
+        for digit in digits:
+            number.append(int(digit))
+        if (i + 1) % 7 == 0:
+            target_b = np.array([1, 0]) if len(examples_b_c) % 2 == 0 else np.array([0, 1])
+            targets_b.append(target_b)
+            target_c = np.full(10, -1)
+            target_c[len(examples_b_c)] = 1
+            targets_c.append(target_c)
+            examples_b_c.append(number)
+            number = [1]
 
-    number7 = [
-    1, 1, 1, 1, 1,
-    0, 0, 0, 0, 1,
-    0, 0, 0, 1, 0,
-    0, 0, 1, 0, 0,
-    0, 1, 0, 0, 0,
-    0, 1, 0, 0, 0,
-    0, 1, 0, 0, 0
-    ]
-    
-    number8 = [
-    0, 1, 1, 1, 0,
-    1, 0, 0, 0, 1,
-    1, 0, 0, 0, 1,
-    0, 1, 1, 1, 0,
-    1, 0, 0, 0, 1,
-    1, 0, 0, 0, 1,
-    0, 1, 1, 1, 0
-    ]
+    test_b = examples_b_c[config.getint('ExerciseB', 'test')]
+    test_c = examples_b_c[config.getint('ExerciseC', 'test')]
 
-    number9 = [
-    0, 1, 1, 1, 0,
-    1, 0, 0, 0, 1,
-    1, 0, 0, 0, 1,
-    0, 1, 1, 1, 1,
-    0, 0, 0, 0, 1,
-    0, 0, 0, 1, 0,
-    0, 1, 1, 0, 0
-    ]
+    output_nodes_a = config.getint('ExerciseA', 'output_nodes')
+    hidden_layer_nodes_a = config.getint('ExerciseA', 'hidden_layer_nodes')
+    hidden_layers_a = config.getint('ExerciseA', 'hidden_layers')
 
-    numberx = [
-    0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0
-    ]
-    
-    input_nodes = 35
-    input_nodes2 = 2
-    output_nodes = 10
-    output_nodes2 = 1
-    output_nodes3 = 2
-    hidden_layer_nodes = 35
-    epochs = 3000
-    apprentice_rate = 0.1  
-    error_wanted = 0.000001
-    
-    beta = 2.5e-01
+    output_nodes_b = config.getint('ExerciseB', 'output_nodes')
+    hidden_layer_nodes_b = config.getint('ExerciseB', 'hidden_layer_nodes')
+    hidden_layers_b = config.getint('ExerciseB', 'hidden_layers')
 
-    empty_row = []
-    first_row = copy.copy(empty_row)
-    second_row = copy.copy(empty_row)
-    second_row.append(1)
-    # print(first_row)
+    output_nodes_c = config.getint('ExerciseC', 'output_nodes')
+    hidden_layer_nodes_c = config.getint('ExerciseC', 'hidden_layer_nodes')
+    hidden_layers_c = config.getint('ExerciseC', 'hidden_layers')
+
+    beta_a = config.getfloat('ExerciseA', 'beta')
+    beta_b = config.getfloat('ExerciseB', 'beta')
+    beta_c = config.getfloat('ExerciseC', 'beta')
+
 
     def activation_function(x):
-        return np.tanh(beta*x)
+        return np.tanh(beta * x)
+
 
     def activation_derivative(x):
-        return beta*(1 - activation_function(x)**2)
-    bias = 0.1
-    examples = [number0, number1, number2, number3, number4, number5, number6, number7, number8, number9]
-    targets = [[1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0], [-1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0], [-1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0], 
-    [-1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0], [-1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0], [-1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0], [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0],
-    [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0], [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0], [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0]]
-    examples2 = [[1, 1], [-1, -1], [1, -1], [-1, 1]]
-    targets2 = [[-1], [-1], [1], [1]]
-    targets3 = [[1, -1], [-1, 1], [1, -1], [-1, 1], [1, -1], [-1, 1], [1, -1], [-1, 1], [1, -1], [-1, 1]]
-    # examples_aux = [[0], [1], [2], [3], [4], [5], [6], [7], [8], [9]]
-    # targets_aux = [[0], [1], [4], [9], [16], [25], [36], [49], [64], [81]]
+        return beta * (1 - activation_function(x) ** 2)
+
+
+    examples = []
+    targets = []
+    test = []
+    output_nodes = 0
+    hidden_layer_nodes = 0
+    hidden_layers = 0
+    beta = 0
+
+    if exercise == "a":
+        examples = examples_a
+        targets = targets_a
+        test = test_a
+        output_nodes = output_nodes_a
+        hidden_layer_nodes = hidden_layer_nodes_a
+        hidden_layers = hidden_layers_a
+        beta = beta_a
+    elif exercise == "b":
+        examples = examples_b_c
+        targets = targets_b
+        test = test_b
+        output_nodes = output_nodes_b
+        hidden_layer_nodes = hidden_layer_nodes_b
+        hidden_layers = hidden_layers_b
+        beta = beta_b
+    elif exercise == "c":
+        examples = examples_b_c
+        targets = targets_c
+        test = test_c
+        output_nodes = output_nodes_c
+        hidden_layer_nodes = hidden_layer_nodes_c
+        hidden_layers = hidden_layers_c
+        beta = beta_c
+
+
+    def add_noise(example, rate):
+        noise = np.random.randint(-2, 3, size=example.shape) * rate
+        example_with_noise = example + noise
+        return example_with_noise
+
     layers = []
-    layers.append(layer.Layer(input_nodes, activation_function, activation_derivative, bias))
-    for i in range(2):
-        layers.append(layer.Layer(hidden_layer_nodes, activation_function, activation_derivative, bias))
-    layers.append(layer.Layer(output_nodes, activation_function, activation_derivative, bias))
+    for i in range(hidden_layers):
+        layers.append(layer.Layer(hidden_layer_nodes, activation_function, activation_derivative))
+    layers.append(layer.Layer(output_nodes, activation_function, activation_derivative))
     perceptron = mp.MultilayerPerceptron(layers, targets, epochs, error_wanted, examples, apprentice_rate)
     perceptron.train()
-    test_inputs = number9
-    # print("pesos despues de train: ", perceptron.weights)
-    perceptron.test(test_inputs)
+    if with_noise:
+        test = add_noise(test, noise_rate)
+    perceptron.test(test)
+    print(perceptron.layers[hidden_layers].activations)

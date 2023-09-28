@@ -1,112 +1,67 @@
-import numpy as np
-import sys
 import random
-import copy
+import sys
+
+import numpy
+import numpy as np
 
 
-class MultilayerPerceptron():
-
+class MultilayerPerceptron:
     def __init__(self, layers, targets, epochs, error_wanted, examples, apprentice_rate):
         self.layers = layers
         self.inputs = None
         self.target = None
         self.weights = None
         self.targets = targets
-        # self.error_function = error_function
-        # self.error_derivative = error_derivative
         self.epochs = epochs
         self.error_wanted = error_wanted
         self.examples = examples
         self.weights_min = None
         self.apprentice_rate = apprentice_rate
 
-    def get_weights(self):
-        return self.weights
+    def initialize_weights(self):
+        new_weights = {}
+        for m in range(len(self.layers)):
+            new_weights[m] = []
+            if m == 0:
+                for j in range(self.layers[m].nodes_dim):
+                    new_weights[m].append(np.random.uniform(-1, 1, size=len(self.examples[0])))
+            else:
+                for j in range(self.layers[m].nodes_dim):
+                    new_weights[m].append(np.random.uniform(-1, 1, size=self.layers[m - 1].nodes_dim + 1))
 
-    def set_weights(self, weights):
-        self.weights = weights
-
-    def get_inputs(self):
-        return self.inputs
-
-    def initialize_weights(self): 
-        # columns = max(self.layers, key=lambda layer: layer.nodes_dim).nodes_dim
-        # new_weights = np.zeros((len(self.layers) - 1, columns , columns), dtype=float)   # CHEQUEAR ACA SI ALGO SE ROMPE
-        new_weights = []
-        empty_row = []
-        for m in range(len(self.layers) - 1):
-            new_weights.append(copy.copy(empty_row))  
-            for j in range(self.layers[m + 1].nodes_dim):
-                new_weights[m].append(copy.copy(empty_row))
-                for k in range(self.layers[m].nodes_dim):
-                    new_weights[m][j].append(random.uniform(-1, 1))
         self.weights = new_weights
-        #weights = self.get_weights()
-        #for weight_col in weights:
-        #    for weight in weight_col:
-        #        weight = random.uniform(0, 1)
-
-    # def excitation_function(self, biases, last_layer_weights, last_layer_activations, last_layer_dim):
-    #     result = []
-    #     for i in range(len(biases)):
-    #         result.append(0)
-    #         for j in range(last_layer_dim):
-    #             result += last_layer_weights[j] * last_layer_activations[j]
-    #         result[i] += biases[i]
-    #     return result
 
     def forward_propagation(self):
-        self.layers[0].set_activations(self.inputs)
-        last_activations = self.get_inputs()
-        for m in range(1, len(self.layers)):
-            self.layers[m].calculate_activations(self.weights[m - 1], last_activations)
-            last_activations = self.layers[m].get_activations()
+        last_activations = self.inputs
+        for m in range(len(self.layers)):
+            last_layer = (m == len(self.layers)-1)
+            self.layers[m].calculate_excitations(self.weights[m], last_activations)
+            self.layers[m].calculate_activations(last_layer)
+            last_activations = self.layers[m].activations
 
-    def calculate_output_gradients(self, output_layer):
-        gradients = []
-        derivatives = output_layer.calculate_derivative()
-        for i in range(output_layer.nodes_dim):
-            gradients.append((self.target[i] - output_layer.get_activations()[i]) * derivatives[i])
+    def calculate_gradients(self):
+        gradients = {}
+        for m in reversed(range(len(self.layers))):
+            gradients[m] = []
+            derivatives = self.layers[m].calculate_derivative()
+            if m == len(self.layers) - 1:
+                delta_array = self.target - self.layers[m].activations
+                gradients[m] = derivatives * delta_array
+            else:
+                product_array = numpy.matmul(numpy.transpose(numpy.matrix(self.weights[m + 1])),
+                                             numpy.transpose(numpy.matrix(gradients[m + 1])))
+                product_array_t = numpy.transpose(product_array)
+                for j in range(self.layers[m].nodes_dim):
+                    gradients[m].append(derivatives[j] * numpy.ravel(product_array_t)[j + 1])
         return gradients
-
-    def calculate_layer_gradients(self, actual_layer, next_layer_gradients, next_weights, next_dim):
-        derivatives = actual_layer.calculate_derivative()
-        gradients = []
-        for j in range(len(derivatives)):
-            aux = 0
-            for i in range(next_dim):
-                aux += next_weights[i][j] * next_layer_gradients[i]
-            aux *= derivatives[j]
-            gradients.append(aux)
-
-        return gradients
-
-    def calculate_gradients(self, layers, weights):
-        last_layer = layers[len(layers) - 1]
-        gradients_by_layer = []
-        empty_row = []
-        for m in range(len(self.layers) - 1):
-            gradients_by_layer.append(copy.copy(empty_row))  
-        m = len(layers) - 2
-        gradients_by_layer[m] = self.calculate_output_gradients(last_layer)
-        m -= 1
-        while m >= 0:
-            gradients_by_layer[m] = self.calculate_layer_gradients(layers[m + 1], gradients_by_layer[m + 1], weights[m + 1], layers[m + 2].nodes_dim)
-            m -= 1
-        return gradients_by_layer
 
     def back_propagation(self):
-        gradients = self.calculate_gradients(self.layers, self.weights)
+        gradients = self.calculate_gradients()
+        activations = self.inputs
         for m in range(len(self.layers) - 1):
-            for j in range(self.layers[m + 1].nodes_dim):
-                for k in range(self.layers[m].nodes_dim):
-                    self.weights[m][j][k] += self.apprentice_rate * gradients[m][j] * self.layers[m].get_activations()[k]
-
-    def mean_squared_error(self, n, real_output, target_output):
-        result = 0
-        for i in range(len(real_output)):
-            result += (real_output[i] - target_output[i]) ** 2
-        result *= (1 / n)
+            weight_update = np.outer(gradients[m], activations) * self.apprentice_rate
+            self.weights[m] += weight_update
+            activations = self.layers[m].activations
 
     def get_error(self):
         error = 0
@@ -114,18 +69,16 @@ class MultilayerPerceptron():
             self.inputs = self.examples[i]
             self.forward_propagation()
             for j in range(len(self.targets[i])):
-                error += (self.layers[len(self.layers)-1].get_activations()[j] - self.targets[i][j])**2
-                # print(self.layers[len(self.layers)-1].activations)
-        error /= 2
+                error += (self.layers[len(self.layers)-1].activations[j] - self.targets[i][j])**2
+        error /= (2 * self.layers[len(self.layers)-1].nodes_dim * len(self.targets))
         return error
 
     def train(self):
-        error = -1
         epochs = self.epochs
         min_error = sys.maxsize
         self.initialize_weights()
         while epochs != 0 and min_error > self.error_wanted:
-            example = random.randint(0, len(self.examples)-1)
+            example = random.randint(0, len(self.examples) - 1)
             self.inputs = self.examples[example]
             self.target = self.targets[example]
             self.forward_propagation()
@@ -140,12 +93,3 @@ class MultilayerPerceptron():
         self.inputs = inputs
         self.weights = self.weights_min
         self.forward_propagation()
-        print(self.layers[len(self.layers) - 1].activations)
-        return self.layers[len(self.layers) - 1]
-
-            
-
-
-
-
-
