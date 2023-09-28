@@ -13,7 +13,8 @@ class Perceptron():
         self.error = None
         self.epochs = 0
 
-    def train(self, data):
+    def train(self, data, maximum, minimum):
+        data = self.normalize_data(data, maximum, minimum)
         length = len(data[0])
         w = self.initialize_weights(length - 1)
         errors = []
@@ -34,8 +35,39 @@ class Perceptron():
         
         return errors
     
+    def normalize_data(self, data, max, min):
+        for d in data:
+            aux = d[len(d)-1]
+            d[len(d)-1] = ( 2 * ( aux - min ) / (max - min) ) - 1
+        return data
+    
     def test(self, data):
         return self.compute_error(data, self.w_min)
+    
+    def test_while_training(self, training, testing, maximum, minimum):
+        training = self.normalize_data(training, maximum, minimum)
+        testing = self.normalize_data(testing, maximum, minimum)
+        length = len(training[0])
+        w = self.initialize_weights(length - 1)
+        errors = []
+        tests = []
+
+        while self.min_error > self.epsilon and self.epochs < self.limit:
+            aux = random.randint(0, len(training)-1)
+            test_data = training[aux]
+            excitement = self.linear_output(test_data, w)
+            activation = self.activation_fun(excitement)
+            delta_w = self.calculate_delta_weights(test_data[length - 1], activation, test_data)
+            w = self.new_weights(w, delta_w)
+            error = self.compute_error(training, w)
+            if error < self.min_error:
+                self.min_error = error
+                self.w_min = w
+            self.epochs += 1
+            errors.append(error)
+            tests.append(self.compute_error(testing, self.w_min))
+        
+        return errors, tests
         
 
     def linear_output(self, data, weights):
