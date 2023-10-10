@@ -21,8 +21,9 @@ if __name__ == "__main__":
                 minimum = aux[len(aux) - 1]
             data = np.append(data , np.array([aux]), axis=0)
         
-        training = data[0:14]
-        testing = data[14:]
+        training = np.append(data[0:7], data[14:21], axis=0)
+        testing = np.append(data[7:14], data[21:], axis=0)
+        neuron = NonLinearPerceptron(0.1, 10000, 0.01,1.6e-01)
 
         neuron01_1 = NonLinearPerceptron(0.1, 10000, 0.01,1.6e-01)
         errors01_1, testing_1 = neuron01_1.test_while_training(training, testing, maximum, minimum)
@@ -44,8 +45,8 @@ if __name__ == "__main__":
         plt.grid(True)
         plt.show()
 
-        training = data[0:5]
-        testing = data[5:]
+        training = data[0:7]
+        testing = data[7:]
 
         neuron01_1 = NonLinearPerceptron(0.1, 10000, 0.01,1.6e-01)
         errors01_1, testing_1 = neuron01_1.test_while_training(training, testing, maximum, minimum)
@@ -60,15 +61,15 @@ if __name__ == "__main__":
         plt.xlabel('Round')
         plt.ylabel('Error')
 
-        plt.title('Non Linear Perceptron - Training 20 % : Testing 80%')
+        plt.title('Non Linear Perceptron - Training 25 % : Testing 75%')
 
         plt.legend()
 
         plt.grid(True)
         plt.show()
 
-        training = data[0:23]
-        testing = data[23:]
+        training = data[0:21]
+        testing = data[21:]
 
         neuron01_1 = NonLinearPerceptron(0.1, 10000, 0.01,1.6e-01)
         errors01_1, testing_1 = neuron01_1.test_while_training(training, testing, maximum, minimum)
@@ -83,7 +84,7 @@ if __name__ == "__main__":
         plt.xlabel('Round')
         plt.ylabel('Error')
 
-        plt.title('Non Linear Perceptron - Training 80 % : Testing 20%')
+        plt.title('Non Linear Perceptron - Training 75 % : Testing 25%')
 
         plt.legend()
 
