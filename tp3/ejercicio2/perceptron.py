@@ -41,7 +41,8 @@ class Perceptron():
             d[len(d)-1] = ( 2 * ( aux - min ) / (max - min) ) - 1
         return data
     
-    def test(self, data):
+    def test(self, data, maximum, minimum):
+        data = self.normalize_data(data, maximum, minimum)
         return self.compute_error(data, self.w_min)
     
     def test_while_training(self, training, testing, maximum, minimum):
@@ -108,7 +109,7 @@ class NonLinearPerceptron (Perceptron):
         aux = 0
         for aux_data in data:
             aux += pow(aux_data[len(aux_data) - 1] - np.tanh(self.beta * self.linear_output(aux_data, weights)), 2)
-        return aux/2
+        return aux/len(data)
 
     def calculate_delta_weights(self, expected, output, data):
         delta_weights = []  
