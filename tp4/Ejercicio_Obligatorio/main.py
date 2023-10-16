@@ -6,8 +6,8 @@ from sklearn.preprocessing import StandardScaler
 from scipy import stats
 
 # Load the dataset
-entry = pd.read_csv("europe.csv").values
-countries = entry[:,0]
+entry = pd.read_csv("../data/europe.csv").values
+countries = entry[:, 0]
 data = entry[:, 1:].astype(float)
 data = stats.zscore(data, axis=0)
 
@@ -40,6 +40,10 @@ plt.show()
 
 # Biplot of PC1 and PC2
 pca_data = pca.transform(data_scaled)[:, :2]
+
+# Print the values of PC1 and PC2 vectors
+print("PC1 Vector:", pca.components_[0])
+print("PC2 Vector:", pca.components_[1])
 
 # Create a DataFrame with the principal components for plotting
 pca_df = pd.DataFrame(data=pca_data, columns=["PC1", "PC2"])
