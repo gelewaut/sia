@@ -51,8 +51,8 @@ pca_df = pd.DataFrame(data=pca_data, columns=["PC1", "PC2"])
 plt.figure(figsize=(8, 6))
 plt.scatter(pca_df["PC1"], pca_df["PC2"])
 # Add labels to each point
-# for i, row in pca_df.iterrows():
-    # plt.text(row["PC1"], row["PC2"], countries[i])  # You can replace 'i' with the label you want to add
+for i, row in pca_df.iterrows():
+    plt.text(row["PC1"], row["PC2"], countries[i])  # You can replace 'i' with the label you want to add
 for i, variable in enumerate(numeric_columns):
     plt.arrow(0, 0, pca.components_[0, i], pca.components_[1, i], color='r', alpha=0.5)
     plt.text(pca.components_[0, i] * 1.5, pca.components_[1, i] * 1.5, variable, color='r')
@@ -64,6 +64,17 @@ plt.show()
 
 # Create an index based on PC1
 data = pca_data[:,0]
+
+plt.bar(countries, data)
+
+# Add labels and title
+plt.xlabel('Countries')
+plt.ylabel('Values')
+plt.title('Bar Chart PC1')
+
+# Show the chart
+plt.xticks(rotation=45)  # Rotate x-axis labels for better visibility
+plt.show()
 # Combine the two lists into a list of tuples using zip
 combined_list = list(zip(countries, data))
 sorted_combined_list = sorted(combined_list, key=lambda x: -x[1])
