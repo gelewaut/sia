@@ -52,13 +52,12 @@ class Kohonen():
                 if numpy.sqrt((ii-i)**2 + (jj-j)**2) < self.radius and not (i==ii and j==jj):
                     self.grid[ii][jj] += self.eta * (input - self.grid[ii][jj])
 
-    def test(self, inputs):
-        result = numpy.empty((self.k, self.k), dtype=numpy.ndarray)
+    def test(self, inputs, countries):
+        numbers = numpy.zeros((self.k, self.k))
+        group_by_countries =  [["" for _ in range(self.k)] for _ in range(self.k)]
         for n in range(len(inputs)):
             i,j = self.find_winner(inputs[n])
-            if result[i][j] is not None:
-                result[i][j] = numpy.append(result[i][j], [n])
-            else:
-                result[i][j] = numpy.array([n])
-        
-        return result
+            numbers[i][j] += 1
+            group_by_countries[i][j] += '\n' + countries[n]
+                    
+        return numbers, group_by_countries
