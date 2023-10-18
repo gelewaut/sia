@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 
 class OjaPCA:
-    def __init__(self, initial_rate=0.0001, max_iterations=1000):
+    def __init__(self, initial_rate=0.0001, max_iterations=1000, decreasing_rate=True):
         self.initial_rate = initial_rate
         self.max_iterations = max_iterations
+        self.decreasing_rate = decreasing_rate
         self.X_means = None
         self.W = None
         self.X_normalized = None
@@ -19,7 +20,10 @@ class OjaPCA:
         self.W = np.random.rand(X.shape[1])
         # Apply Oja's rule to find the first principal component
         for iteration in range(self.max_iterations):
-            learning_rate = self.initial_rate * np.exp(-0.0001 * iteration)
+            if self.decreasing_rate:
+                learning_rate = self.initial_rate * np.exp(-self.initial_rate * iteration)
+            else:
+                learning_rate = self.initial_rate
             for x in self.X_normalized:
                 y = x.dot(self.W)
                 delta_W = learning_rate * y * (x - y * self.W)  # Update rule for Oja's rule
