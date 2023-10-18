@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a46b146-a332-4c4a-9706-f736c5603900" name="Changes" comment="Ejercicio Obligatorio 17/10">
-      <change afterPath="$PROJECT_DIR$/tp4/ejercicio1/oja_pca.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tp4/Ejercicio_Obligatorio/europe.csv" beforeDir="false" afterPath="$PROJECT_DIR$/tp4/data/europe.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tp4/Ejercicio_Obligatorio/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/tp4/Ejercicio_Obligatorio/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tp4/ejercicio1/graphics_kohonen.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tp4/ejercicio1/graphics_oja.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tp4/.ipynb_checkpoints/Kohonen-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/tp4/.ipynb_checkpoints/Kohonen-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tp4/ejercicio1/oja_pca.py" beforeDir="false" afterPath="$PROJECT_DIR$/tp4/ejercicio1/oja_pca.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tp4/europe.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tp4/graphics_kohonen.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tp4/kohonen.py" beforeDir="false" afterPath="$PROJECT_DIR$/tp4/ejercicio1/kohonen.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,24 +36,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/enzoruedas/Documents/Enzo/Argentina/ITBA/SIA/Group2",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/enzoruedas/Documents/Enzo/Argentina/ITBA/SIA/Group2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tp4/ejercicio1" />
       <recent name="$PROJECT_DIR$/tp4/data" />
     </key>
   </component>
@@ -91,6 +97,8 @@
       <updated>1697042736272</updated>
       <workItem from="1697042737989" duration="1539000" />
       <workItem from="1697459919595" duration="3324000" />
+      <workItem from="1697567561532" duration="618000" />
+      <workItem from="1697638396302" duration="3128000" />
     </task>
     <task id="LOCAL-00001" summary="Ejercicio Obligatorio 17/10">
       <option name="closed" value="true" />
@@ -122,7 +130,9 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Group2$oja_pca.coverage" NAME="oja_pca Coverage Results" MODIFIED="1697463205759" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/ejercicio1" />
+    <SUITE FILE_PATH="coverage/Group2$oja_pca.coverage" NAME="oja_pca Coverage Results" MODIFIED="1697641392519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/ejercicio1" />
+    <SUITE FILE_PATH="coverage/Group2$graphics_oja.coverage" NAME="graphics_oja Coverage Results" MODIFIED="1697641501483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/ejercicio1" />
+    <SUITE FILE_PATH="coverage/Group2$graphics_kohonen.coverage" NAME="graphics_kohonen Coverage Results" MODIFIED="1697640078171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/ejercicio1" />
     <SUITE FILE_PATH="coverage/Group2$main.coverage" NAME="main Coverage Results" MODIFIED="1697463101168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/Ejercicio_Obligatorio" />
   </component>
 </project>
