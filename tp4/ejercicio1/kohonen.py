@@ -21,6 +21,9 @@ class Kohonen:
             i, j = self.find_winner(data)
             self.update_weights(data, i, j)
             epoch += 1
+            self.eta = 1/(epoch+1)
+            if self.radius != 1:
+                self.radius -= 1
 
     def initialize_weights(self, data):
         length = len(data)
@@ -60,3 +63,26 @@ class Kohonen:
             group_by_countries[i][j] += '\n' + countries[n]
 
         return numbers, group_by_countries
+
+    def unified_distance_matrix(self):
+        matrix = numpy.empty((self.k, self.k), dtype=int)
+        for i in range(self.k):
+            for j in range(self.k):
+                distance = 0.0
+                neighbors = 0
+
+                if i > 0:
+                    distance += numpy.linalg.norm(self.grid[i][j] - self.grid[i-1][j])
+                    neighbors += 1
+                if i < self.k-1:
+                    distance += numpy.linalg.norm(self.grid[i][j] - self.grid[i+1][j])
+                    neighbors += 1
+                if j > 0:
+                    distance += numpy.linalg.norm(self.grid[i][j] - self.grid[i][j-1])
+                    neighbors += 1
+                if j < self.k-1:
+                    distance += numpy.linalg.norm(self.grid[i][j] - self.grid[i][j+1])
+                    neighbors += 1
+
+                matrix[i][j] = distance / neighbors
+        return matrix

@@ -1,3 +1,5 @@
+import configparser
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas
@@ -11,14 +13,18 @@ if __name__ == "__main__":
     values = reader[:, 1:].astype(float)
     values = stats.zscore(values, axis=0)
 
-    k = 2
-    radius = 1
-    eta = 0.1
+    config = configparser.ConfigParser()
+    config.read('../config.ini')
+
+    k = config.getint('Kohonen', 'k')
+    radius = k if config.getint('Kohonen', 'radius') == 0 else config.getint('Kohonen', 'radius')
+    eta = config.getfloat('Kohonen', 'eta')
+    epochs = len(values[0])*config.getint('Kohonen', 'epochs')
 
     grid = Kohonen(k, eta, radius)
-    grid.train(values, 500)
+    grid.train(values, epochs)
     result, group_by_countries = grid.test(values, countries)
-    print(countries)
+    print(group_by_countries)
     rows, cols = result.shape
 
     # Coordenadas de los cuadrados
@@ -70,4 +76,10 @@ if __name__ == "__main__":
     plt.xticks(np.arange(0, cols), np.arange(0, cols))
     plt.yticks(np.arange(0, rows), np.arange(0, rows))
 
+    plt.show()
+
+    # Unified Distance Matrix
+    average_distances = grid.unified_distance_matrix()
+    plt.imshow(average_distances, cmap='gray', interpolation='nearest')
+    plt.colorbar()
     plt.show()
