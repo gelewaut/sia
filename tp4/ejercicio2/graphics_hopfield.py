@@ -1,9 +1,4 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas
-import sys
-import random
-from scipy import stats
 import hopfield
 
 if __name__ == "__main__":

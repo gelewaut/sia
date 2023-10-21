@@ -4,7 +4,7 @@ import numpy as np
 
 if __name__ == "__main__":
     # Load or generate your dataset as matrix "X"
-    entry = pd.read_csv("../data/europe.csv").values
+    entry = pd.read_csv("data/europe.csv").values
     countries = entry[:, 0]
     data = entry[:, 1:].astype(float)
     X = np.array(data)

@@ -7,9 +7,10 @@ from scipy import stats
 from kohonen import Kohonen
 
 if __name__ == "__main__":
-    file = "../data/europe.csv"
+    file = "data/europe.csv"
     reader = pandas.read_csv(file).values
-    countries = reader[:,0]
+    variables = pandas.read_csv(file).keys().values
+    countries = reader[:, 0]
     values = reader[:, 1:].astype(float)
     values = stats.zscore(values, axis=0)
 
@@ -19,7 +20,7 @@ if __name__ == "__main__":
     k = config.getint('Kohonen', 'k')
     radius = k if config.getint('Kohonen', 'radius') == 0 else config.getint('Kohonen', 'radius')
     eta = config.getfloat('Kohonen', 'eta')
-    epochs = len(values[0])*config.getint('Kohonen', 'epochs')
+    epochs = config.getint('Kohonen', 'epochs')
 
     grid = Kohonen(k, eta, radius)
     grid.train(values, epochs)
@@ -30,7 +31,7 @@ if __name__ == "__main__":
     # Coordenadas de los cuadrados
     # x = np.linspace(0, 1, cols+1)[:-1]  # Distribuye las columnas uniformemente
     # y = np.linspace(0, 1, rows+1)[:-1]
-    rows, cols = result.shape
+    # rows, cols = result.shape
     # data = np.random.rand(10, 10)
 
     plt.figure(figsize=(k, k))
