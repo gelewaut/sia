@@ -37,17 +37,23 @@ class Hopfield():
     def algorithm(self, input, epochs):
         epoch = 0
         to_return = []
-        s = numpy.sign(self.weights.dot(input))
+        to_return.append(input)
+        s = numpy.array(self.sign(input, self.weights.dot(input)))
         to_return.append(s)
         while epoch < epochs:
             epoch += 1
-            s_next = self.sign(s, self.weights.dot(s))
+            s_next = numpy.array(self.sign(s, self.weights.dot(s)))
             if numpy.array_equal(s, s_next):
+                to_return.append(s_next)
                 return to_return
             s = s_next
             to_return.append(s)
-
+        
+        to_return.append(s_next)
         return to_return
             
     def get_weights(self):
         return self.weights
+    
+    def get_energy(self, s):
+        return self.weights.dot(s).dot(s) / -2.0

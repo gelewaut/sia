@@ -23,37 +23,74 @@ if __name__ == "__main__":
     epochs = config.getint('Oja', 'epochs')
 
     oja = OjaPCA(eta, decreasing_eta, data)
-    # oja.fit(epochs)
-    # fpc = oja.get_first_principal_component()
-    # print(fpc)
+    oja.fit(epochs)
+    fpc = oja.get_first_principal_component()
+    print(fpc)
 
     pca = PCA()
     pca.fit(data)
     print("PC1 Vector:", pca.components_[0])
 
-    distances = []
-    epochs_axis = []
-    for i in range(10):
-        oja.fit(epochs)
-        fpc = oja.get_first_principal_component()
-        print(fpc)
-        distances.append(numpy.linalg.norm(pca.components_[0] - fpc))
-        epochs_axis.append((i+1)*epochs)
+    print(numpy.linalg.norm(pca.components_[0] - fpc))
 
-    plt.xlabel('Epocas')
-    plt.ylabel('Distancia')
-    plt.plot(epochs_axis, distances, color='red', linestyle='-')
+    # distances = []
+    # epochs_axis = []
+    # for i in range(10):
+    #     oja.fit(epochs)
+    #     fpc = oja.get_first_principal_component()
+    #     print(fpc)
+    #     distances.append(numpy.linalg.norm(pca.components_[0] - fpc))
+    #     epochs_axis.append((i+1)*epochs)
+
+    # plt.xlabel('Epocas')
+    # plt.ylabel('Distancia')
+    # plt.plot(epochs_axis, distances, color='red', linestyle='-')
+    # plt.show()
+
+    index = []
+    for x in data:
+        index.append(fpc.dot(x))
+
+    combined_list = list(zip(countries, index))
+    sorted_combined_list = sorted(combined_list, key=lambda d: -d[1])
+    
+    l1, l2 = zip(*sorted_combined_list)
+
+    # print(sorted_combined_list)
+    
+    plt.figure(figsize=(15, 10))
+    plt.bar(l1, l2)
+    plt.xlabel('Countries')
+    plt.ylabel('Values')
+    plt.xticks(rotation=45)
+    for i, value in enumerate(l2):
+        if value > 0: 
+            plt.text(i, value, str(f'{value:.2f}'), ha='center', va='bottom')
+        else: 
+            plt.text(i, value, str(f'{value:.2f}'), ha='center', va='top')
     plt.show()
 
-    # index = []
-    # for x in X_normalized:
-    #     index.append(fpc.dot(x))
-    #
-    # plt.figure(figsize=(15, 10))
-    # plt.bar(countries, index)
-    # plt.xlabel('Countries')
-    # plt.ylabel('Values')
-    # plt.xticks(rotation=45)
-    # plt.show()
+    index = []
+    for x in data:
+        index.append(pca.components_[0].dot(x))
+
+    combined_list = list(zip(countries, index))
+    sorted_combined_list = sorted(combined_list, key=lambda d: -d[1])
+    
+    l1, l2 = zip(*sorted_combined_list)
+
+    # print(sorted_combined_list)
+    
+    plt.figure(figsize=(15, 10))
+    plt.bar(l1, l2)
+    plt.xlabel('Countries')
+    plt.ylabel('Values')
+    plt.xticks(rotation=45)
+    for i, value in enumerate(l2):
+        if value > 0: 
+            plt.text(i, value, str(f'{value:.2f}'), ha='center', va='bottom')
+        else: 
+            plt.text(i, value, str(f'{value:.2f}'), ha='center', va='top')
+    plt.show()
 
 

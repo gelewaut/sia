@@ -53,7 +53,7 @@ class Kohonen:
     def update_weights(self, input, i, j):
         for ii in range(self.k):
             for jj in range(self.k):
-                if numpy.sqrt((ii - i) ** 2 + (jj - j) ** 2) < self.radius and not (i == ii and j == jj):
+                if numpy.sqrt((ii - i) ** 2 + (jj - j) ** 2) <= self.radius and not (i == ii and j == jj):
                     self.grid[ii][jj] += self.eta * (input - self.grid[ii][jj])
 
     def test(self, inputs, countries):
