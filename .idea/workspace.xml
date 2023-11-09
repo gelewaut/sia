@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1a46b146-a332-4c4a-9706-f736c5603900" name="Changes" comment="Ejercicio Obligatorio 17/10">
-      <change afterPath="$PROJECT_DIR$/tp4/ejercicio1/graphics_kohonen.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tp4/ejercicio1/graphics_oja.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tp4/.ipynb_checkpoints/Kohonen-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/tp4/.ipynb_checkpoints/Kohonen-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tp4/ejercicio1/oja_pca.py" beforeDir="false" afterPath="$PROJECT_DIR$/tp4/ejercicio1/oja_pca.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tp4/europe.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tp4/graphics_kohonen.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tp4/kohonen.py" beforeDir="false" afterPath="$PROJECT_DIR$/tp4/ejercicio1/kohonen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tp5/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/tp5/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,6 +92,7 @@
       <workItem from="1697459919595" duration="3324000" />
       <workItem from="1697567561532" duration="618000" />
       <workItem from="1697638396302" duration="3128000" />
+      <workItem from="1699539688184" duration="45000" />
     </task>
     <task id="LOCAL-00001" summary="Ejercicio Obligatorio 17/10">
       <option name="closed" value="true" />
@@ -130,9 +124,9 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Group2$oja_pca.coverage" NAME="oja_pca Coverage Results" MODIFIED="1697641392519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/ejercicio1" />
+    <SUITE FILE_PATH="coverage/Group2$oja_pca.coverage" NAME="oja_pca Coverage Results" MODIFIED="1699539696356" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/ejercicio1" />
     <SUITE FILE_PATH="coverage/Group2$graphics_oja.coverage" NAME="graphics_oja Coverage Results" MODIFIED="1697641501483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/ejercicio1" />
     <SUITE FILE_PATH="coverage/Group2$graphics_kohonen.coverage" NAME="graphics_kohonen Coverage Results" MODIFIED="1697640078171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/ejercicio1" />
-    <SUITE FILE_PATH="coverage/Group2$main.coverage" NAME="main Coverage Results" MODIFIED="1697463101168" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp4/Ejercicio_Obligatorio" />
+    <SUITE FILE_PATH="coverage/Group2$main.coverage" NAME="main Coverage Results" MODIFIED="1699539706292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tp5" />
   </component>
 </project>

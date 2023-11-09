@@ -35,7 +35,6 @@ if __name__ == '__main__':
     original_data = np.array(Font3)
     dataset_size = original_data.shape[0]
     input_size = original_data.shape[1]
-    print(input_size)
     original_data_reshape = original_data.reshape(dataset_size, input_size)
     # Convert each digit in original_data to binary and reshape
     binary_data = [digit_to_binary_flat(letter) for letter in original_data]
