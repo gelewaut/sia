@@ -8,6 +8,15 @@ def activation_function(beta, x):
 def derivative_function(beta, x):
     return beta * (1 - activation_function(beta, x) ** 2)
 
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+
+def sigmoid_derivative(x):
+    return sigmoid(x) * (1 - sigmoid(x))
+
+
 class NeuralNetwork:
     def __init__(self, layer_sizes, beta):
         self.layer_sizes = layer_sizes
@@ -18,30 +27,31 @@ class NeuralNetwork:
 
     def forward_propagation(self, x):
         activations = [x]
-        layer_input = x
         for i in range(self.num_layers - 1):
-            layer_output = np.dot(layer_input, self.weights[i]) + self.biases[i]
-            activation = activation_function(self.beta, layer_output)
+            if i == self.num_layers - 2:  # Dernière couche
+                activation = sigmoid(np.dot(activations[-1], self.weights[i]) + self.biases[i])
+            else:
+                activation = np.tanh(np.dot(activations[-1], self.weights[i]) + self.biases[i])
             activations.append(activation)
-            layer_input = activation
         return activations
 
     def backward_propagation(self, x, y, learning_rate):
         activations = self.forward_propagation(x)
-        layer_input = x
         deltas = []
         for i in range(self.num_layers - 1, 0, -1):
             activation = activations[i]
             prev_activation = activations[i - 1]
+
             if i == self.num_layers - 1:
-                delta = (activation - y) * derivative_function(self.beta, activation)
+                delta = (activation - y) * sigmoid_derivative(activation)
             else:
-                delta = delta.dot(self.weights[i].T) * derivative_function(self.beta, activation)
+                delta = deltas[0].dot(self.weights[i].T) * (1 - activation ** 2)  # Pour tanh
+
             deltas.insert(0, delta)
             weight_gradient = prev_activation.T.dot(delta)
             bias_gradient = np.sum(delta, axis=0, keepdims=True)
-            self.weights[i-1] -= learning_rate * weight_gradient
-            self.biases[i-1] -= learning_rate * bias_gradient
+            self.weights[i - 1] -= learning_rate * weight_gradient
+            self.biases[i - 1] -= learning_rate * bias_gradient
 
     def train(self, X, y, learning_rate, epochs):
         for epoch in range(epochs):
@@ -56,13 +66,13 @@ class NeuralNetwork:
 # Example usage:
 if __name__ == "__main__":
     # Define the network architecture and activation functions
-    layer_sizes = [2, 3, 2, 1]  # Input layer, two hidden layers, output layer
+    layer_sizes = [3, 10, 5, 1]  # Input layer, two hidden layers, output layer
     # Create the neural network
     nn = NeuralNetwork(layer_sizes, 1)
 
     # Generate some random data for training
-    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-    y = np.array([[0], [1], [1], [0]])
+    X = np.array([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]])
+    y = np.array([[0], [1], [1], [0], [1], [0], [0], [1]])
 
     # Train the network
     learning_rate = 0.1

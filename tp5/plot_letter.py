@@ -5,7 +5,7 @@ import numpy as np
 def int_to_bits_matrix(letter):
     letter_matrix = []
     for line in letter:
-        bin_value = bin(line)[2:].zfill(8)  # Supprimez le 'b' indésirable
+        bin_value = bin(line)[2:].zfill(5)  # Supprimez le 'b' indésirable
         letter_matrix.append(bin_value)
     matrix = np.array([[int(pixel) for pixel in row] for row in letter_matrix])
     return matrix
@@ -18,7 +18,7 @@ def create_letter_plot(letter, ax, cmap='Blues'):
 
 
 def print_letter_7x8(letter, cmap='Blues'):
-    fig, ax = plt.subplots(1, 1, figsize=(8, 7))
+    fig, ax = plt.subplots(1, 1, figsize=(5, 7))
     fig.set_dpi(360)
 
     letter_matrix = int_to_bits_matrix(letter)
@@ -26,3 +26,6 @@ def print_letter_7x8(letter, cmap='Blues'):
 
     plt.show()
 
+if __name__ == '__main__':
+    letter = [0, 14, 1, 13, 19, 19, 13]
+    print_letter_7x8(letter)
