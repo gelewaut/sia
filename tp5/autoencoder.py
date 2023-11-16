@@ -18,6 +18,11 @@ class Autoencoder:
         self.encoder = Encoder(layer_sizes, beta)
         layer_sizes = [encoding_size] + decoder_hidden_layers + [input_size]
         self.decoder = Decoder(layer_sizes, beta)
+        self.best_weights_decoder = None
+        self.best_weights_encoder = None
+        self.best_biases_decoder = None
+        self.best_biases_encoder = None
+
 
     def train(self, input_data, learning_rate, max_error, max_epochs):
         epoch = 0
@@ -27,13 +32,14 @@ class Autoencoder:
             total_reconstruction_error = 0.0
             for i in range(input_data.shape[0]):
                 x = input_data[i].reshape(1, -1)
-                encoded_data = self.encoder.forward_propagation(x)[-1]
-                decoded_data = self.decoder.forward_propagation(encoded_data)[-1]
-                error = x - decoded_data
+                encoder_activations = self.encoder.forward_propagation(x)
+                decoder_activations = self.decoder.forward_propagation(encoder_activations[-1])
+                error = x - decoder_activations[-1]
 
                 # Backpropagation for encoder and decoder
-                self.encoder.backward_propagation(x, encoded_data, learning_rate)
-                self.decoder.backward_propagation(encoded_data, x, learning_rate)
+                decoder_delta = self.decoder.backward_propagation(decoder_activations, x, learning_rate, True)
+                # self.encoder.backward_propagation(encoder_activations, decoder_delta, learning_rate, False)
+                self.encoder.backward_propagation(encoder_activations, encoder_activations[-1], learning_rate, False)
 
                 # Compute reconstruction error
                 reconstruction_error = np.mean(np.square(error))
@@ -43,9 +49,21 @@ class Autoencoder:
             if avg_reconstruction_error < best_error:
                 best_epoch = epoch
                 best_error = avg_reconstruction_error
+                self.best_weights_decoder = self.decoder.weights
+                self.best_weights_encoder = self.encoder.weights
+                self.best_biases_decoder = self.decoder.biases
+                self.best_biases_encoder = self.encoder.biases
+
 
             if avg_reconstruction_error < max_error:
                 break  # Stop training if the error is below the specified threshold
 
             epoch += 1
         print(f"Epoch {epoch}/{max_epochs}, Avg. Reconstruction Error: {best_error:.4f}")
+
+    def test(self, input_data):
+        encoder_activations = self.encoder.test(input_data ,self.best_weights_encoder, self.best_biases_encoder)
+        decoder_activations = self.decoder.test(encoder_activations[-1], self.best_weights_decoder, self.best_biases_decoder)
+
+        return decoder_activations[-1]
+

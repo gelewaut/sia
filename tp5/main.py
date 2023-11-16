@@ -54,9 +54,8 @@ if __name__ == '__main__':
     reconstructed_data = []
     for i in range(input_data.shape[0]):
         x = input_data[i].reshape(1, -1)
-        encoded_data = autoencoder.encoder.forward_propagation(x)[-1]
-        decoded_data = autoencoder.decoder.forward_propagation(encoded_data)[-1]
-        binary_output = np.round(decoded_data)  # Arrondir pour obtenir des valeurs binaires
+        encoded_data = autoencoder.test(x)
+        binary_output = np.round(encoded_data)  # Arrondir pour obtenir des valeurs binaires
         reconstructed_data.append(binary_output)
 
     reconstructed_data = np.array(reconstructed_data).reshape(dataset_size, 35)
