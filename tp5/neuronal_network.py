@@ -24,21 +24,30 @@ class NeuralNetwork:
         self.num_layers = len(layer_sizes)
         self.weights = [np.random.randn(layer_sizes[i], layer_sizes[i+1]) for i in range(self.num_layers - 1)]
         self.biases = [np.zeros((1, layer_sizes[i+1])) for i in range(self.num_layers - 1)]
-        #RMSProp Parameters
-        self.s = [np.zeros((layer_sizes[i], layer_sizes[i+1])) for i in range(self.num_layers - 1)]
-        self.sg = [np.zeros((1, layer_sizes[i+1])) for i in range(self.num_layers - 1)]
-        self.gamma = 0.9
-        self.e = 1e-07
+        
+        #ADAM Parameters
+        self.m = [np.zeros((layer_sizes[i], layer_sizes[i+1])) for i in range(self.num_layers - 1)]
+        self.v = [np.zeros((layer_sizes[i], layer_sizes[i+1])) for i in range(self.num_layers - 1)]
+        self.mg = [np.zeros((1, layer_sizes[i+1])) for i in range(self.num_layers - 1)]
+        self.vg = [np.zeros((1, layer_sizes[i+1])) for i in range(self.num_layers - 1)]
+        self.a = 0.001
+        self.b1 = 0.9
+        self.b2 = 0.999
+        self.e = 10e-08
 
-    def optimize_weights(self, weight_gradient, learning_rate, i):
-        s_aux = self.gamma * self.s[i-1] + (1-self.gamma)*(weight_gradient**2)
-        self.s[i-1] = s_aux
-        self.weights[i-1] -= (learning_rate/np.sqrt(s_aux+self.e))*weight_gradient
+    def optimize_weights(self, weight_gradient, learning_rate, i, epoch):
+        m_aux = self.b1 * self.m[i-1] + (1-self.b1)*weight_gradient
+        v_aux = self.b2 * self.v[i-1] + (1-self.b2)*(weight_gradient**2)
+        self.m[i-1] = m_aux
+        self.v[i-1] = v_aux
+        self.weights[i-1] -= (self.a * m_aux/(1-self.b1**epoch)) / (np.sqrt(v_aux/(1-self.b2**epoch)) + self.e)
 
-    def optimize_biases(self, bias_gradient, learning_rate, i):
-        sg_aux = self.gamma * self.sg[i-1] + (1-self.gamma)*(bias_gradient**2)
-        self.sg[i-1]
-        self.biases[i-1] -= (learning_rate/np.sqrt(sg_aux+self.e))*bias_gradient
+    def optimize_biases(self, bias_gradient, learning_rate, i, epoch):
+        m_aux = self.b1 * self.mg[i-1] + (1-self.b1)*bias_gradient
+        v_aux = self.b2 * self.vg[i-1] + (1-self.b2)*(bias_gradient**2)
+        self.mg[i-1] = m_aux
+        self.vg[i-1] = v_aux
+        self.biases[i-1] -= (self.a * m_aux/(1-self.b1**epoch)) / (np.sqrt(v_aux/(1-self.b2**epoch)) + self.e)
 
     def forward_propagation(self, x):
         activations = [x]
@@ -50,7 +59,7 @@ class NeuralNetwork:
             activations.append(activation)
         return activations
 
-    def backward_propagation(self, activations, y, learning_rate, is_decoder):
+    def backward_propagation(self, activations, y, learning_rate, epoch, is_decoder):
         deltas = []
         is_decoder = True
         for i in range(self.num_layers - 1, 0, -1):
@@ -68,8 +77,8 @@ class NeuralNetwork:
             deltas.insert(0, delta)
             weight_gradient = prev_activation.T.dot(delta)
             bias_gradient = np.sum(delta, axis=0, keepdims=True)
-            self.optimize_weights(weight_gradient, learning_rate, i)
-            self.optimize_biases(bias_gradient, learning_rate, i)
+            self.optimize_weights(weight_gradient, learning_rate, i, epoch)
+            self.optimize_biases(bias_gradient, learning_rate, i, epoch)
             # self.weights[i - 1] -= learning_rate * weight_gradient
             # self.biases[i - 1] -= learning_rate * bias_gradient
         

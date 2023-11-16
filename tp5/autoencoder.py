@@ -29,6 +29,7 @@ class Autoencoder:
         best_epoch = sys.maxsize
         best_error = sys.maxsize
         while epoch < max_epochs:
+            epoch += 1
             total_reconstruction_error = 0.0
             for i in range(input_data.shape[0]):
                 x = input_data[i].reshape(1, -1)
@@ -37,9 +38,9 @@ class Autoencoder:
                 error = x - decoder_activations[-1]
 
                 # Backpropagation for encoder and decoder
-                decoder_delta = self.decoder.backward_propagation(decoder_activations, x, learning_rate, True)
+                decoder_delta = self.decoder.backward_propagation(decoder_activations, x, learning_rate, epoch,True)
                 # self.encoder.backward_propagation(encoder_activations, decoder_delta, learning_rate, False)
-                self.encoder.backward_propagation(encoder_activations, encoder_activations[-1], learning_rate, False)
+                self.encoder.backward_propagation(encoder_activations, encoder_activations[-1], learning_rate, epoch, False)
 
                 # Compute reconstruction error
                 reconstruction_error = np.mean(np.square(error))
@@ -58,7 +59,6 @@ class Autoencoder:
             if avg_reconstruction_error < max_error:
                 break  # Stop training if the error is below the specified threshold
 
-            epoch += 1
         print(f"Epoch {epoch}/{max_epochs}, Avg. Reconstruction Error: {best_error:.4f}")
 
     def test(self, input_data):
