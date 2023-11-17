@@ -70,5 +70,5 @@ class Autoencoder:
         encoder_activations = self.encoder.test(input_data ,self.best_weights_encoder, self.best_biases_encoder)
         decoder_activations = self.decoder.test(encoder_activations[-1], self.best_weights_decoder, self.best_biases_decoder)
 
-        return decoder_activations[-1]
+        return decoder_activations[-1], encoder_activations[-1]
 

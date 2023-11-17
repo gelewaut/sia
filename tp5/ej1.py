@@ -3,6 +3,7 @@ from plot_letter import print_letter_7x8
 import numpy as np
 from autoencoder import Autoencoder
 import configparser
+import matplotlib.pyplot as plt
 
 
 # Function to convert a digit to binary representation of size 5
@@ -52,12 +53,28 @@ if __name__ == '__main__':
 
     # Reconstruction of example data
     reconstructed_data = []
+    latent_space_graph = []
     for i in range(input_data.shape[0]):
         x = input_data[i].reshape(1, -1)
-        encoded_data = autoencoder.test(x)
+        encoded_data, latent_space = autoencoder.test(x)
         binary_output = np.round(encoded_data)  # Arrondir pour obtenir des valeurs binaires
         reconstructed_data.append(binary_output)
+        latent_space_graph.append(latent_space[0])
 
+    letters=['`', 'a', 'b', 'c', 'd', 'e', 'f', 'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','{','|','}','~','DEL']
+    # i=0
+    # for space in latent_space_graph:
+    #     plt.scatter(space[0], space[1], marker='o', label=letters[i])
+    #     i+=1
+    # x_coordinates, y_coordinates = zip(*latent_space_graph)
+    # plt.scatter(x_coordinates, y_coordinates, color='blue', marker='o', label='Points')
+    for i, label in enumerate(letters):
+        plt.annotate(label, (latent_space_graph[i][0], latent_space_graph[i][1]), textcoords="offset points", xytext=(0, 5), ha='center')
+    plt.title('Scatter Plot with Letters')
+
+    # Display the plot
+    plt.show()
+    
     reconstructed_data = np.array(reconstructed_data).reshape(dataset_size, 35)
 
     digit_reconstructed_data = [binary_flat_to_digit(binary_row) for binary_row in reconstructed_data]
