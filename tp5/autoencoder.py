@@ -31,7 +31,9 @@ class Autoencoder:
         while epoch < max_epochs:
             epoch += 1
             total_reconstruction_error = 0.0
+            bit_error = True
             for i in range(input_data.shape[0]):
+
                 x = input_data[i].reshape(1, -1)
                 encoder_activations = self.encoder.forward_propagation(x)
                 decoder_activations = self.decoder.forward_propagation(encoder_activations[-1])
@@ -43,6 +45,9 @@ class Autoencoder:
                 # self.encoder.backward_propagation(encoder_activations, encoder_activations[-1], learning_rate, epoch, False)
 
                 # Compute reconstruction error
+                binary_error = x - np.round(decoder_activations[-1])
+                if(np.sum(np.square(binary_error)) > 1):
+                    bit_error = False
                 reconstruction_error = np.mean(np.square(error))
                 total_reconstruction_error += reconstruction_error
 
@@ -56,7 +61,7 @@ class Autoencoder:
                 self.best_biases_encoder = self.encoder.biases
 
 
-            if avg_reconstruction_error < max_error:
+            if bit_error:
                 break  # Stop training if the error is below the specified threshold
 
         print(f"Epoch {epoch}/{max_epochs}, Avg. Reconstruction Error: {best_error:.4f}")
