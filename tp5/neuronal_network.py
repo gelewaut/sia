@@ -61,7 +61,6 @@ class NeuralNetwork:
 
     def backward_propagation(self, activations, y, learning_rate, epoch, is_decoder):
         deltas = []
-        is_decoder = True
         for i in range(self.num_layers - 1, 0, -1):
             activation = activations[i]
             prev_activation = activations[i - 1]
@@ -70,7 +69,7 @@ class NeuralNetwork:
                 if is_decoder:
                     delta = (activation - y) * sigmoid_derivative(activation)
                 else:
-                    delta = y * (1 - activation ** 2)
+                    delta = y
             else:
                 delta = deltas[0].dot(self.weights[i].T) * (1 - activation ** 2)  # Pour tanh
 
@@ -82,7 +81,7 @@ class NeuralNetwork:
             # self.weights[i - 1] -= learning_rate * weight_gradient
             # self.biases[i - 1] -= learning_rate * bias_gradient
         
-        return delta[0].dot(self.weights[0].T)
+        return delta[0].dot(self.weights[0].T) * sigmoid_derivative(prev_activation)
 
     def train(self, X, y, learning_rate, epochs):
         for epoch in range(epochs):

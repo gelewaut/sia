@@ -38,9 +38,9 @@ class Autoencoder:
                 error = x - decoder_activations[-1]
 
                 # Backpropagation for encoder and decoder
-                decoder_delta = self.decoder.backward_propagation(decoder_activations, x, learning_rate, epoch,True)
-                # self.encoder.backward_propagation(encoder_activations, decoder_delta, learning_rate, False)
-                self.encoder.backward_propagation(encoder_activations, encoder_activations[-1], learning_rate, epoch, False)
+                decoder_delta = self.decoder.backward_propagation(decoder_activations, x, learning_rate, epoch, True)
+                self.encoder.backward_propagation(encoder_activations, decoder_delta, learning_rate, epoch, False)
+                # self.encoder.backward_propagation(encoder_activations, encoder_activations[-1], learning_rate, epoch, False)
 
                 # Compute reconstruction error
                 reconstruction_error = np.mean(np.square(error))
