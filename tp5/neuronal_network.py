@@ -64,6 +64,8 @@ class NeuralNetwork:
         for i in range(self.num_layers - 1, 0, -1):
             activation = activations[i]
             prev_activation = activations[i - 1]
+            if (prev_activation.size == 1):
+                prev_activation = np.array(prev_activation)
 
             if i == self.num_layers - 1:
                 if is_decoder:
