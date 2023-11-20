@@ -22,7 +22,7 @@ class Autoencoder:
         self.best_weights_encoder = None
         self.best_biases_decoder = None
         self.best_biases_encoder = None
-
+        self.best_error = 0
 
     def train(self, input_data, learning_rate, max_error, max_epochs):
         epoch = 0
@@ -46,7 +46,7 @@ class Autoencoder:
 
                 # Compute reconstruction error
                 binary_error = x - np.round(decoder_activations[-1])
-                if(np.sum(np.square(binary_error)) > 1):
+                if (np.sum(np.square(binary_error)) > 1):
                     bit_error = False
                 reconstruction_error = np.mean(np.square(error))
                 total_reconstruction_error += reconstruction_error
@@ -55,11 +55,11 @@ class Autoencoder:
             if avg_reconstruction_error < best_error:
                 best_epoch = epoch
                 best_error = avg_reconstruction_error
+                self.best_error = best_error
                 self.best_weights_decoder = self.decoder.weights
                 self.best_weights_encoder = self.encoder.weights
                 self.best_biases_decoder = self.decoder.biases
                 self.best_biases_encoder = self.encoder.biases
-
 
             if bit_error:
                 break  # Stop training if the error is below the specified threshold
@@ -67,8 +67,48 @@ class Autoencoder:
         print(f"Epoch {epoch}/{max_epochs}, Avg. Reconstruction Error: {best_error:.4f}")
 
     def test(self, input_data):
-        encoder_activations = self.encoder.test(input_data ,self.best_weights_encoder, self.best_biases_encoder)
-        decoder_activations = self.decoder.test(encoder_activations[-1], self.best_weights_decoder, self.best_biases_decoder)
+        encoder_activations = self.encoder.test(input_data, self.best_weights_encoder, self.best_biases_encoder)
+        decoder_activations = self.decoder.test(encoder_activations[-1], self.best_weights_decoder,
+                                                self.best_biases_decoder)
 
         return decoder_activations[-1], encoder_activations[-1]
 
+
+class Denoising(Autoencoder):
+    def train(self, input_data, target_data, learning_rate, max_epochs):
+        epoch = 0
+        best_error = sys.maxsize
+        while epoch < max_epochs:
+            epoch += 1
+            total_reconstruction_error = 0.0
+            for i in range(input_data.shape[0]):
+                x = input_data[i].reshape(1, -1)
+                t = target_data[i].reshape(1, -1)
+                encoder_activations = self.encoder.forward_propagation(x)
+                decoder_activations = self.decoder.forward_propagation(encoder_activations[-1])
+                error = t - decoder_activations[-1]
+
+                # Backpropagation for encoder and decoder
+                decoder_delta = self.decoder.backward_propagation(decoder_activations, t, learning_rate, epoch, True)
+                self.encoder.backward_propagation(encoder_activations, decoder_delta, learning_rate, epoch, False)
+                # self.encoder.backward_propagation(encoder_activations, encoder_activations[-1], learning_rate, epoch, False)
+
+                reconstruction_error = np.mean(np.square(error))
+                total_reconstruction_error += reconstruction_error
+
+            avg_reconstruction_error = total_reconstruction_error / input_data.shape[0]
+            if avg_reconstruction_error < best_error:
+                best_error = avg_reconstruction_error
+                self.best_error = best_error
+                self.best_weights_decoder = self.decoder.weights
+                self.best_weights_encoder = self.encoder.weights
+                self.best_biases_decoder = self.decoder.biases
+                self.best_biases_encoder = self.encoder.biases
+
+        print(f"Epoch {epoch}/{max_epochs}, Avg. Reconstruction Error: {best_error:.4f}")
+
+
+class Generative(Autoencoder):
+    def test(self, activations):
+        decoder_activations = self.decoder.test(activations, self.best_weights_decoder, self.best_biases_decoder)
+        return decoder_activations[-1]
