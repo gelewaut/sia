@@ -5,6 +5,7 @@ import csv
 from vae import VAE
 import configparser
 import matplotlib.pyplot as plt
+import seaborn as sns
 from ej1 import digit_to_binary_flat, binary_flat_to_digit
 
 if __name__ == '__main__': 
@@ -38,30 +39,22 @@ if __name__ == '__main__':
     autoencoder.train(input_data, learning_rate, max_error, max_epochs)
 
     reconstructed_data = []
-    latent_space_graph = []
 
-    letter = np.random.choice(len(input_data))
-    # for i in range(input_data.shape[0]):
-    #     x = input_data[i].reshape(1, -1)
-    #     encoded_data, latent_space = autoencoder.test(x)
-    #     binary_output = np.round(encoded_data)  # Arrondir pour obtenir des valeurs binaires
-    #     reconstructed_data.append(binary_output)
+    fig, axs = plt.subplots(21, 21, figsize=(12, 12))
+    columns = 0
+    rows = 0
+    for x in range(21):
+        x_value = x * 0.05
+        for y in reversed(range(21)):
+            y_value = y * 0.05
+            letter = autoencoder.generate([[x_value, y_value]])
+            ax = axs[columns, rows]
+            reshaped_letter = np.reshape(letter, (7, 5))
+            ax.imshow(reshaped_letter, cmap='gray_r', interpolation='nearest', vmin=0, vmax=1)
+            ax.axis('off')
+            columns += 1
+        rows += 1
+        columns = 0
+    fig.tight_layout(pad=0.5)
 
-    x = input_data[letter].reshape(1, -1)
-
-    for _ in range(5):
-        encoded_data, latent_space = autoencoder.test(x)
-        binary_output = np.round(encoded_data)
-        reconstructed_data.append(binary_output)
-        # autoencoder.generate(latent_space)
-        # binary_output = np.round(encoded_data)
-        # reconstructed_data.append(binary_output)
-
-    reconstructed_data = np.array(reconstructed_data).reshape(10, 35)
-
-    digit_reconstructed_data = [binary_flat_to_digit(binary_row) for binary_row in reconstructed_data]
-
-    # Afficher les données originales et reconstruites
-    print_letter_7x8(original_data_reshape[letter])
-    for index in range(len(digit_reconstructed_data)):
-        print_letter_7x8(digit_reconstructed_data[index])
+    plt.show()
