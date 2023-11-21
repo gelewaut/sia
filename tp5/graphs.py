@@ -74,6 +74,63 @@ def error_vs_epochs(encoding_size, beta, input_data, learning_rate, max_epochs):
     plt.show()
 
 
+def print_all_letters(encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta, input_data, learning_rate, max_error, max_epochs):
+    reshaped_input_size = input_data.shape[1]
+    autoencoder = Autoencoder(reshaped_input_size, encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta)
+
+    autoencoder.train(input_data, learning_rate, max_error, max_epochs)
+
+    reconstructed_data = []
+    for i in range(input_data.shape[0]):
+        x = input_data[i].reshape(1, -1)
+        encoded_data, latent_space = autoencoder.test(x)
+        reconstructed_data.append(encoded_data)
+
+    for index in range(len(reconstructed_data)):
+        print_letter(reconstructed_data[index])
+
+
+def error_vs_learning_rate(encoding_size, beta, input_data, encoder_hidden_layers, decoder_hidden_layers, max_epochs):
+    reshaped_input_size = input_data.shape[1]
+
+    learning_rates = [0.001, 0.01, 0.1, 1]
+    errors = []
+    for learning_rate in learning_rates:
+        print(learning_rate)
+        sum = 0
+        for j in range(10):
+            autoencoder = Autoencoder(reshaped_input_size, encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta)
+            autoencoder.train(input_data, learning_rate, 0, max_epochs)
+            sum += autoencoder.best_error
+        errors.append(sum/10)
+
+    plt.bar([str(learning_rate) for learning_rate in learning_rates], errors)
+    plt.xlabel('Tasa')
+    plt.ylabel('Error')
+    plt.show()
+
+
+def error_vs_beta(encoding_size, beta, input_data, encoder_hidden_layers, decoder_hidden_layers, max_epochs, learning_rate):
+    reshaped_input_size = input_data.shape[1]
+
+    betas = []
+    errors = []
+    for i in range(1, 101):
+        print(i)
+        sum = 0
+        for j in range(10):
+            autoencoder = Autoencoder(reshaped_input_size, encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta * i)
+            autoencoder.train(input_data, learning_rate, 0, max_epochs)
+            sum += autoencoder.best_error
+        betas.append(i * beta)
+        errors.append(sum/10)
+
+    plt.plot(betas, errors)
+    plt.xlabel('Beta')
+    plt.ylabel('Error')
+    plt.show()
+
+
 def latent_space(encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta, input_data, learning_rate,
                  max_error, max_epochs):
     reshaped_input_size = input_data.shape[1]
@@ -110,17 +167,13 @@ def generate_new_letter(encoding_size, encoder_hidden_layers, decoder_hidden_lay
 
     autoencoder.train(input_data, learning_rate, max_error, max_epochs)
 
-    x_values = []
-    y_values = []
     fig, axs = plt.subplots(21, 21, figsize=(12, 12))
     columns = 0
     rows = 0
     for x in range(21):
         x_value = x * 0.05
-        x_values.append(x_value)
         for y in reversed(range(21)):
             y_value = y * 0.05
-            y_values.append(y_value)
             letter = autoencoder.test([x_value, y_value])
             ax = axs[columns, rows]
             reshaped_letter = np.reshape(letter, (7, 5))
@@ -164,6 +217,28 @@ def denoise_structures(encoding_size, beta, input_data, learning_rate, max_epoch
     line.set_ylabel('Error')
     line.set_title('Denoising Autoencoders')
     line.legend()
+    plt.show()
+
+
+def error_vs_noise(encoding_size, beta, input_data, encoder_hidden_layers, decoder_hidden_layers, max_epochs, learning_rate):
+    reshaped_input_size = input_data.shape[1]
+
+    noises = []
+    errors = []
+    for i in range(1, 11):
+        print(i)
+        sum = 0
+        for j in range(10):
+            noisy_data = add_noise(input_data, noise_rate * i)
+            autoencoder = Denoising(reshaped_input_size, encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta)
+            autoencoder.train(noisy_data, input_data, learning_rate, max_epochs)
+            sum += autoencoder.best_error
+        noises.append(noise_rate * i)
+        errors.append(sum/10)
+
+    plt.plot(noises, errors)
+    plt.xlabel('Tasa')
+    plt.ylabel('Error')
     plt.show()
 
 
@@ -215,5 +290,8 @@ if __name__ == '__main__':
     # latent_space(encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta, input_data, learning_rate, max_error, max_epochs)
     # denoise_structures(encoding_size, beta, input_data, learning_rate, max_epochs, noise_rate)
     # denoise(encoding_size, beta, input_data, learning_rate, max_epochs, noise_rate)
-    generate_new_letter(encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta, input_data, learning_rate,
-                        max_error, max_epochs)
+    # generate_new_letter(encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta, input_data, learning_rate, max_error, max_epochs)
+    # error_vs_beta(encoding_size, beta, input_data, encoder_hidden_layers, decoder_hidden_layers, max_epochs, learning_rate)
+    # print_all_letters(encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta, input_data, learning_rate, max_error, max_epochs)
+    # error_vs_noise(encoding_size, beta, input_data, encoder_hidden_layers, decoder_hidden_layers, max_epochs, learning_rate)
+    error_vs_learning_rate(encoding_size, beta, input_data, encoder_hidden_layers, decoder_hidden_layers, max_epochs)
