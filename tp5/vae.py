@@ -8,18 +8,24 @@ class Sampler(NeuralNetwork):
         self.size = size
     
     def forward_propagation(self, x):
-        e = np.random.normal(0,1)
-        z = np.split(x, self.size)
-        return (z[0] * e) + z[1]
+        e = np.random.standard_normal(size=(self.size))
+        z = np.array_split(x[0], self.size)
+        sigma = np.array([z[0]])
+        mu = np.array([z[1]])
+        return sigma * e + mu, e, sigma, mu
     
-    def backward_propagation(self, activations, y, learning_rate, epoch, is_decoder):
-        return super().backward_propagation(activations, y, learning_rate, epoch, is_decoder)
+    def backward_propagation(self, e, y):
+        sigma_gradient = y * e
+        mu_gradient = y
+        return np.concatenate((sigma_gradient, mu_gradient), axis=1)
+        
 
 class VAE(Autoencoder):
     def __init__(self, input_size, encoding_size, encoder_hidden_layers, decoder_hidden_layers, beta):
-        layer_sizes = [input_size] + encoder_hidden_layers + [encoding_size]
+        layer_sizes = [input_size] + encoder_hidden_layers + [encoding_size * 2]
         self.encoder = Encoder(layer_sizes, beta)
-        layer_sizes = [encoding_size - 1] + decoder_hidden_layers + [input_size]
+        self.sampler = Sampler(encoding_size)
+        layer_sizes = [encoding_size] + decoder_hidden_layers + [input_size]
         self.decoder = Decoder(layer_sizes, beta)
         self.best_weights_decoder = None
         self.best_weights_encoder = None
@@ -39,13 +45,13 @@ class VAE(Autoencoder):
                 
                 # Encoder Forward Prop
                 encoder_activations = self.encoder.forward_propagation(x)
-                # z = self.trick.forward_propagation(encoder_activations)
+                z, e, sigma, mu = self.sampler.forward_propagation(encoder_activations[-1])
 
                 # Reparametrization
-                sigma = encoder_activations[-1][0][0]
-                mu = encoder_activations[-1][0][1]
-                e = np.random.normal(0,1)
-                z = (e * sigma) + mu
+                # sigma = encoder_activations[-1][0][0]
+                # mu = encoder_activations[-1][0][1]
+                # e = np.random.normal(0,1)
+                # z = (e * sigma) + mu
 
                 # Decoder Forward Prop
                 decoder_activations = self.decoder.forward_propagation(z)
@@ -53,19 +59,23 @@ class VAE(Autoencoder):
                 mse = np.mean(np.square(error))
 
                 # Backpropagation for encoder and decoder
-                decoder_delta = self.decoder.backward_propagation(decoder_activations, x, learning_rate, epoch, True)
+                sampler_delta = self.decoder.backward_propagation(decoder_activations, x, learning_rate, epoch, True)
+                decoder_delta = self.sampler.backward_propagation(e, sampler_delta)
 
                 # KL
                 KL = self.calculate_KL(sigma, mu)
+                # print(KL)
 
                 # BackProp Encoder
-                decoder_delta = np.array([[decoder_delta[0] * e - KL, decoder_delta[0] - KL]])
+                # decoder_delta = np.array([[decoder_delta[0] * e - KL, decoder_delta[0] - KL]])
                 self.encoder.backward_propagation(encoder_activations, decoder_delta, learning_rate, epoch, False)
 
-                reconstruction_error = mse
+                reconstruction_error = mse - np.mean(KL)
+                # print(mse, np.mean(KL))
                 total_reconstruction_error += reconstruction_error
 
             avg_reconstruction_error = total_reconstruction_error / input_data.shape[0]
+            print(avg_reconstruction_error)
             if avg_reconstruction_error < best_error:
                 best_epoch = epoch
                 best_error = avg_reconstruction_error
@@ -80,7 +90,7 @@ class VAE(Autoencoder):
         print(f"Epoch {epoch}/{max_epochs}, Avg. Reconstruction Error: {best_error:.4f}")
 
     def calculate_KL(self, sigma, mu):
-        return 0.5 * np.sum(1 + sigma - np.square(mu) - (np.exp(sigma)))
+        return 0.5 * np.sum(1 + sigma - np.square(mu) - (np.exp(sigma)), axis=0)
     
     def test(self, input_data):
         encoder_activations = self.encoder.test(input_data , self.best_weights_encoder, self.best_biases_encoder)
