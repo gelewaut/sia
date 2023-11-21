@@ -25,7 +25,7 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('config.ini')
 
-    beta = config.getint('General', 'beta')
+    beta = config.getfloat('General', 'beta')
     encoder_hidden_layers_str = config.get('General', 'encoder_hidden_layers')
     encoder_hidden_layers = [int(layer_size) for layer_size in encoder_hidden_layers_str.strip('[]').split(',')]
     decoder_hidden_layers_str = config.get('General', 'decoder_hidden_layers')

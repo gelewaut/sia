@@ -9,7 +9,7 @@ class Sampler(NeuralNetwork):
     
     def forward_propagation(self, x):
         e = np.random.standard_normal(size=(self.size))
-        z = np.array_split(x[0], self.size)
+        z = np.array_split(x[0], 2)
         sigma = np.array([z[0]])
         mu = np.array([z[1]])
         return sigma * e + mu, e, sigma, mu
@@ -90,6 +90,9 @@ class VAE(Autoencoder):
 
             if avg_reconstruction_error < max_error:
                 break  # Stop training if the error is below the specified threshold
+
+            if epoch%500==0:
+                print(epoch)
 
         print(f"Epoch {epoch}/{max_epochs}, Avg. Reconstruction Error: {best_error:.4f}")
 
